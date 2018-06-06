@@ -17,6 +17,9 @@ class StatisticsWidget(QWidget):
     
 
     def initUI(self):
+        """
+        initialize the widget parameter
+        """
         self.setWindowTitle(self.title)
         # print(self.parent.minimumSizeHint().height())
         self.setGeometry(self.left,
@@ -34,23 +37,30 @@ class StatisticsWidget(QWidget):
         self.layout.addWidget(self.table_widget)
         self.setLayout(self.layout)
         # self.resize(self.sizeHint().width(), self.sizeHint().height())
-
-
         self.show()
 
+
     def reload(self, game):
+        """
+        reloads all statistics with the given game instance
+        """
         self.game = game
         self.table_widget.clear()
 
+
     def update(self):
-        # self.table_widget.clear()
+        """
+        redraw statistics
+        """
         self.display_statistics()
 
 
     def display_statistics(self):
+        """
+        create a table for statistics for all individuals
+        """
         populations = ["pop1", "pop2"]
         
-
         header = []
         for pop in populations:
             for i in range(len(self.game.game_objects[pop])):
@@ -59,49 +69,7 @@ class StatisticsWidget(QWidget):
         # self.table_widget.setSpan(1,0,7,0)
         # setItem(row, column, item)
 
-        # self.table_widget.setItem(0,0,QTableWidgetItem("Dead"))
-
-        # self.table_widget.setItem(1,0,QTableWidgetItem("Perception"))
-        # self.table_widget.setItem(1,1,QTableWidgetItem("Food"))
-        # self.table_widget.setItem(2,1,QTableWidgetItem("Poison"))
-        # self.table_widget.setItem(3,1,QTableWidgetItem("Heal Potion"))
-        # self.table_widget.setItem(4,1,QTableWidgetItem("Corpse"))
-        # self.table_widget.setItem(5,1,QTableWidgetItem("Opponent"))
-        # self.table_widget.setItem(6,1,QTableWidgetItem("Predator"))
-
-
-        # self.table_widget.setItem(7,0,QTableWidgetItem("Desires"))
-        # self.table_widget.setItem(7,1,QTableWidgetItem("Seek Food"))
-        # self.table_widget.setItem(8,1,QTableWidgetItem("Dodge Poison"))
-        # self.table_widget.setItem(9,1,QTableWidgetItem("Seek Heal Potion"))
-        # self.table_widget.setItem(10,1,QTableWidgetItem("Seek Opponents"))
-        # self.table_widget.setItem(11,1,QTableWidgetItem("Seek Corpse"))
-        # self.table_widget.setItem(12,1,QTableWidgetItem("Dodge Predators"))
-
-        # self.table_widget.setItem(13,0,QTableWidgetItem("Abilities"))
-        # self.table_widget.setItem(13,1,QTableWidgetItem("Increased Armor"))
-        # self.table_widget.setItem(14,1,QTableWidgetItem("Increased Speed"))
-        # self.table_widget.setItem(15,1,QTableWidgetItem("Increased Poison Resistance"))
-        # self.table_widget.setItem(16,1,QTableWidgetItem("Increased Breeding"))
-        # self.table_widget.setItem(17,1,QTableWidgetItem("Increased Poisoness"))
-
-        # self.table_widget.setItem(18,0,QTableWidgetItem("Statistics"))
-        # self.table_widget.setItem(18,1,QTableWidgetItem("Food Eaten"))
-        # self.table_widget.setItem(19,1,QTableWidgetItem("Poison Eaten"))
-        # self.table_widget.setItem(20,1,QTableWidgetItem("Consumed Heal Potions"))
-        # self.table_widget.setItem(21,1,QTableWidgetItem("Consumed Corpses"))
-        # self.table_widget.setItem(22,1,QTableWidgetItem("Attacked Enemies"))
-        # self.table_widget.setItem(23,1,QTableWidgetItem("Attacked by Opponents"))
-        # self.table_widget.setItem(24,1,QTableWidgetItem("Attacked by Predators"))
-        # self.table_widget.setItem(25,1,QTableWidgetItem("Food Seen"))
-        # self.table_widget.setItem(26,1,QTableWidgetItem("Poison Seen"))
-        # self.table_widget.setItem(27,1,QTableWidgetItem("Heal Potion Seen"))
-        # self.table_widget.setItem(28,1,QTableWidgetItem("Opponent Seen"))
-        # self.table_widget.setItem(29,1,QTableWidgetItem("Predator Seen"))
-        # self.table_widget.setItem(30,1,QTableWidgetItem("Corpse Seen"))
-
         self.table_widget.setHorizontalHeaderLabels(header)
-
         v_header_labels = [
             "Dead",
             "Food Perception",
@@ -135,10 +103,7 @@ class StatisticsWidget(QWidget):
             "Predator Seen",
             "Corpse Seen"
         ]
-
-
         self.table_widget.setVerticalHeaderLabels(v_header_labels)
-
         pop_offset = 0
         for pop in populations:
             index = 0

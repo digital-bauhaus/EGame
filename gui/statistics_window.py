@@ -12,12 +12,21 @@ class StatisticsWindow(QMainWindow):
         self.show()
     
     def update(self):
+        """
+        pass through and update the statistic widget
+        """
         self.statistics_widget.update()
 
     def reload(self, game):
+        """
+        pass through and reload the statistics window
+        """
         self.statistics_widget.reload(game)
 
     def timerEvent(self, event):
+        """
+        timer event to be called in certain interval
+        """
         self.update()
 
 

@@ -33,12 +33,20 @@ class EGame:
     
         self.item_config = self.config.items
 
+        # blueish
         self.color_pop1 = (100, 100, 255)
+        # orangish
         self.color_pop2 = (255, 165, 0)
 
         self.game_objects = {}
    
+
     def start(self):
+        """
+        start the game and initialize all game parameter
+        add individuals to populations
+        add food | poison | potions
+        """
         self.game_objects['pop1'] = []
         self.game_objects['pop2'] = []
         self.game_objects['food'] = []
@@ -59,13 +67,19 @@ class EGame:
 
 
     def update(self):
+        """
+        update all game elements frame by frame
+        """
         self.update_population(self.game_objects['pop1'], opponent="pop2")
         self.update_population(self.game_objects['pop2'], opponent="pop1")
         self.update_predators(self.game_objects['predators'])
-        self.create_objects()
+        self.create_items()
     
     
-    def create_objects(self):
+    def create_items(self):
+        """
+        generate items on the field
+        """
         self.create_food()
         self.create_poison()
         self.create_potion()
@@ -73,6 +87,9 @@ class EGame:
 
     
     def create_food(self):
+        """
+        create food on field if there was some eaten
+        """
         if (
             uniform(0, 1) < self.spawn_prob_food
             and len(self.game_objects['food']) < self.num_food
@@ -82,6 +99,9 @@ class EGame:
 
     
     def create_poison(self):
+        """
+        create poison on field if there was some eaten
+        """
         if (
             uniform(0, 1) < self.spawn_prob_poison
             and len(self.game_objects['poison']) < self.num_poison
@@ -91,6 +111,9 @@ class EGame:
     
     
     def create_potion(self):
+        """
+        create potion on the field if there was some eaten
+        """
         if (
             uniform(0, 1) < self.spawn_prob_potion
             and len(self.game_objects['health_potion']) < self.num_health_potions
@@ -101,6 +124,9 @@ class EGame:
 
     
     def create_predators(self):
+        """
+        generate predators
+        """
         if (
             uniform(0, 1) < self.spawn_prob_predator
             and len(self.game_objects['predators']) < self.num_predators
@@ -111,38 +137,59 @@ class EGame:
 
     
     def update_population(self, population, opponent):
+        """
+        update all individuals in all populations
+        """
         for i in population:
+            # if the individual is not dead
             if not i.dead:
                 i.decrase_health()
                 if i.health <= 0.0:
+                    # generate a corpse at the position where the individual died
                     self.game_objects["corpse"].append(Corpse(self.parent, 
                                                             self.border_width,
                                                             i.poison,
                                                             position=i._position))
                     i.dead = True
                     continue
+                # it survived a frame longer
                 i.increment_survived_time()
+                # apply seek algorithm
                 i.seek(self.game_objects, opponent)
+                # apply the boundary force to stay in game area
                 i.stay_in_boundaries(self.border_width)
+                # apply acceleration to velocity
                 i.update()
 
     
     def update_predators(self, predators):
+        """
+        update all predators
+        """
         for i in predators:
+            # predators also die in time if they don't eat
             i.decrase_health()
             if i.health <= 0.0:
+                # and they spawn a corpse
                 self.game_objects["corpse"].append(Corpse(self.parent,
                                                              self.border_width,
                                                              i.poison,
                                                              position=i._position))
                 predators.remove(i)
                 continue
+            # they only are interested in seeking individuals of all populations
+            # and corpses
             i.seek_populations(self.game_objects, ["pop1", "pop2"])
+            # apply the boundary force to stay in game area
             i.stay_in_boundaries(self.border_width)
+            # apply acceleration to velocity
             i.update()
     
     
     def draw(self, painter):
+        """
+        draw all game elements on the frame
+        """
         self.draw_border(painter)
         for f in self.game_objects['food']:
             f.draw(painter)
@@ -164,6 +211,7 @@ class EGame:
     
     def draw_border(self, painter):
         """draw the inner field where objects are repelled on"""
+        # but only if the respective debug setting is enabled
         if self.parent.parent_window.debug['repell_frame']:
             color = QColor(0, 0, 0, 0)
             w = self.parent.frameGeometry().width()

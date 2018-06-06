@@ -11,15 +11,18 @@ class Predator(Individual):
                  radius=None,
                  color=None):
         Individual.__init__(self, parent, color, radius, position)
+        # a predator is slower than individuals
         self.max_speed = self.max_speed * self.predator_config["speed_factor"]
+        # it has perceptions and desires defined in config file
         self.perception = Perception(self.predator_config["default_perception"], True)
         self.desires = Desires(self.predator_config["default_desires"], True)
         self.radius = self.predator_config['size']
 
+        # we want that the predators spawn outside of the game area        
         _left_border = 0
-        _right_border = int(self.parent.board_dimension[0])
+        _right_border = int(self.parent.frame_dimension[0])
         _top_border = 0
-        _bottom_border = int(self.parent.board_dimension[1])
+        _bottom_border = int(self.parent.frame_dimension[1])
         _xa = float(randint(-100, _left_border))
         _xb = float(randint(_right_border, _right_border + 100))
         if uniform(0, 1) < 0.5:
@@ -35,4 +38,7 @@ class Predator(Individual):
         self._position = np.array([_x, _y])
 
     def add_attack_count(self, individual):
+       """
+       increment the hit counter for the attacked enemy
+       """
        individual.statistic.attacked_by_predators += 1

@@ -17,9 +17,9 @@ class Predator(Individual):
         self.radius = self.predator_config['size']
 
         _left_border = 0
-        _right_border = int(self.parent.board_dimension[0])
+        _right_border = int(self.parent.frame_dimension[0])
         _top_border = 0
-        _bottom_border = int(self.parent.board_dimension[1])
+        _bottom_border = int(self.parent.frame_dimension[1])
         _xa = float(randint(-100, _left_border))
         _xb = float(randint(_right_border, _right_border + 100))
         if uniform(0, 1) < 0.5:

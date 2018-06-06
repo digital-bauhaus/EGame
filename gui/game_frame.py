@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QBasicTimer, QPointF, QRectF, QSizeF, pyqtSignal
 from game.egame import EGame
 from gui.statistics_window import StatisticsWindow
 
-class Board(QFrame):
+class GameFrame(QFrame):
 
     msg2Statusbar = pyqtSignal(str)
 
@@ -14,13 +14,13 @@ class Board(QFrame):
         self.parent_window = parent
         self.config = parent.config
         self.global_config = parent.global_config
-        self.board_dimension = (self.global_config['frame']['width'],
+        self.frame_dimension = (self.global_config['frame']['width'],
                                 self.global_config['frame']['height'])
         self.game_speed = self.global_config['game_speed']
-        self.initBoard()
+        self.init_frame()
         # self.setMouseTracking(True)
-        self.setFixedSize(self.board_dimension[0],
-                          self.board_dimension[1])
+        self.setFixedSize(self.frame_dimension[0],
+                          self.frame_dimension[1])
         self.setStyleSheet("background-color: " + \
             self.global_config['frame']['background_color'])
 
@@ -36,7 +36,7 @@ class Board(QFrame):
     def refresh_statistic_window(self):
         self.statistics_window.reload(self.game)
 
-    def initBoard(self):
+    def init_frame(self):
         self.timer = QBasicTimer()
         self.isStarted = False
         self.isPaused = False

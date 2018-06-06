@@ -28,9 +28,9 @@ class Individual(metaclass=abc.ABCMeta):
         # if a position was given
         if not position:
             _left_border = 0
-            _right_border = int(self.parent.board_dimension[0])
+            _right_border = int(self.parent.frame_dimension[0])
             _top_border = 0
-            _bottom_border = int(self.parent.board_dimension[1])
+            _bottom_border = int(self.parent.frame_dimension[1])
             _x = float(randint(_left_border, _right_border))
             _y = float(randint(_top_border, _bottom_border))
             self._position = np.array([_x, _y])

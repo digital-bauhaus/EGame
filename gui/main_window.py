@@ -1,13 +1,11 @@
 from PyQt5.QtWidgets import QMainWindow, QAction
 from PyQt5.QtGui import QIcon
 
-from .frame import Board
+from .game_frame import GameFrame
 
 import math
 
 class App(QMainWindow):
-
-
     def __init__(self, config, parent=None):
         super(App, self).__init__(parent=parent)
         self.config = config
@@ -22,7 +20,11 @@ class App(QMainWindow):
 
         self.initUI()
 
+
     def init_debug(self):
+        """
+        Declare variables for the Options->Debug
+        """
         self.debug["repell_frame"] = True
         self.debug["health"] = True
         self.debug["velocity_vector"] = False
@@ -34,15 +36,20 @@ class App(QMainWindow):
         self.debug["corpse_perception"] = False
         self.debug["all_perceptions"] = False
 
+
     def initUI(self):
+        """
+        Initialize the graphical user interface
+        """
         self.setWindowTitle(self.window_title)
         self.setGeometry(self.padding[0],
                          self.padding[1],
                          self.resolution[0],
                          self.resolution[1])
-        self.game_widget = Board(self)
-        self.setCentralWidget(self.game_widget)
+        self.game_frame = GameFrame(self)
+        self.setCentralWidget(self.game_frame)
 
+        # add top menu bar with items
         self.mainMenu = self.menuBar()
         self.gameMenu = self.mainMenu.addMenu('Game')
         self.optionMenu = self.mainMenu.addMenu('Options')
@@ -50,11 +57,16 @@ class App(QMainWindow):
         self.add_main_menu_items()
 
         self.statusbar = self.statusBar()
-        self.game_widget.msg2Statusbar[str].connect(self.statusbar.showMessage)
+
+        # connect statusbar with messages from game_frame
+        self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
 
 
 
     def add_main_menu_items(self):
+        """
+        add all Game menu items (Start Game and Exit)
+        """
         self.startButton = QAction('Start Game', self)
         self.startButton.triggered.connect(lambda: self.start_game())
         self.exitButton = QAction('Exit', self)
@@ -63,24 +75,41 @@ class App(QMainWindow):
         self.gameMenu.addAction(self.startButton)
         self.gameMenu.addAction(self.exitButton)
 
+
     def start_game(self):
+        """
+        start the game (create a new game instance)
+        """
+        # enable the statistic button in the top menu bar
         self.statistic_button.setEnabled(True)
-        self.game_widget.start()
+        self.game_frame.start()
+
 
     def add_option_menu_items(self):
+        """
+        add items to Option Element in top menu bar
+        """
+        # create a submenu
         self.toggleMenu = self.optionMenu.addMenu("Debug")
         self.add_toggle_menu_items()
         self.add_statistics_menu()
 
 
     def add_statistics_menu(self):
+        """
+        add item to Option->Show popukation statistics
+        """
         self.statistic_button = QAction("show population statistics", self)
-        self.statistic_button.triggered.connect(lambda: self.game_widget.open_statistics())
+        self.statistic_button.triggered.connect(lambda: self.game_frame.open_statistics())
         self.optionMenu.addAction(self.statistic_button)
+        # disabled by default
         self.statistic_button.setEnabled(False)
 
 
     def add_toggle_menu_items(self):
+        """
+        add all menu entries for Options->Debug
+        """
         self.build_button(
             self.toggleMenu, 'toggle repell frame', "repell_frame")
         self.build_button(
@@ -102,13 +131,20 @@ class App(QMainWindow):
         self.build_button(
             self.toggleMenu, 'toggle all perception radius', "all_perceptions")
 
+
     def build_button(self, parent, label, setting):
+        """
+        add button to given menu item and register toggle_debug with the given setting to it
+        """
         button = QAction(label, self)
         button.triggered.connect(lambda: self.toggle_debug(setting))
         parent.addAction(button)
 
 
     def toggle_debug(self, setting):
+        """
+        toggle a debug setting
+        """
         print("toggle " + setting)
         if setting == "all_perceptions":
             self.debug["all_perceptions"] = not self.debug["all_perceptions"]
@@ -116,8 +152,3 @@ class App(QMainWindow):
                 self.debug[k] = self.debug["all_perceptions"]
         else:
             self.debug[setting] = not self.debug[setting]
-        # self.print_settings()
-
-    def print_settings(self):
-        for key, value in self.debug.items():
-            print(key, "\t", value)

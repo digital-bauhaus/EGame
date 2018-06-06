@@ -18,7 +18,6 @@ class GameFrame(QFrame):
                                 self.global_config['frame']['height'])
         self.game_speed = self.global_config['game_speed']
         self.init_frame()
-        # self.setMouseTracking(True)
         self.setFixedSize(self.frame_dimension[0],
                           self.frame_dimension[1])
         self.setStyleSheet("background-color: " + \
@@ -40,6 +39,9 @@ class GameFrame(QFrame):
 
 
     def init_frame(self):
+        """
+        init the frame and declare frame variables
+        """
         self.timer = QBasicTimer()
         self.isStarted = False
         self.isPaused = False

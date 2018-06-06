@@ -1,4 +1,5 @@
-#!python3
+#!/usr/bin/env python3
+
 from PyQt5.QtWidgets import QApplication
 from gui.main_window import App
 from config import Config

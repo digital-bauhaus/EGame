@@ -25,16 +25,19 @@ class GameFrame(QFrame):
             self.global_config['frame']['background_color'])
 
 
-    # def mouseMoveEvent(self, event):
-    #     self.mouse_x = event.x()
-    #     self.mouse_y = event.y()
-
     def open_statistics(self):
+        """
+        open a new window to display population details
+        """
         self.statistics_window = StatisticsWindow(self, self.game)
 
 
     def refresh_statistic_window(self):
+        """
+        reload the statistic window with the new game instance
+        """
         self.statistics_window.reload(self.game)
+
 
     def init_frame(self):
         self.timer = QBasicTimer()
@@ -43,6 +46,9 @@ class GameFrame(QFrame):
 
 
     def start(self):
+        """
+        start a new EGame
+        """
         if self.isPaused:
             return
         print("start game")
@@ -51,6 +57,7 @@ class GameFrame(QFrame):
         self.timer.start(self.game_speed, self)
         self.msg2Statusbar.emit(str("new game started"))
         self.isStarted = True
+        # check if there is a statistic window opened
         if (
             hasattr(self, "statistics_window") 
             and self.statistics_window is not None
@@ -69,9 +76,9 @@ class GameFrame(QFrame):
             self.update()
             
 
-
     def paintEvent(self, event):
         """paint the shapes of the game"""
         painter = QPainter(self)
+        # paint only when game is started
         if self.isStarted:
             self.game.draw(painter)

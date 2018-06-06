@@ -23,4 +23,8 @@ class Perception:
             # self.aoe = init_values[7]
     
     def absolute(self, type):
+        """
+        since the max amount of pixels for perception is configurable
+        all perceptions are percentages of the absolute value 
+        """
         return type * self.absolute_val

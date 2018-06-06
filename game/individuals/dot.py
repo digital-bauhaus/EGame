@@ -12,6 +12,7 @@ class Dot(Individual):
                  radius=None,
                  color=None):
         Individual.__init__(self, parent, color, radius, position)
+        # an individual has perceptions, desires and abilities
         self.perception = Perception(self.individual_config['default_perception'],
                                      self.individual_config['use_default_perception'])
         self.desires = Desires(self.individual_config['default_desires'],
@@ -21,9 +22,15 @@ class Dot(Individual):
         self.dead = False
 
     def add_attack_count(self, individual):
+        """
+        increment the hit counter for the attacked enemy
+        """
         individual.statistic.attacked_by_opponents += 1
 
     def statistic_to_table(self, table_widget, index):
+        """
+        print individual information to the statistic window
+        """
         # setItem(row, column, item)
 
         table_widget.setItem(0, index, QTableWidgetItem(str(self.dead)))

@@ -1,0 +1,2 @@
+install pyqt5
+sudo apt install python3-pyqt5

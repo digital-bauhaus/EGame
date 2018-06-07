@@ -25,6 +25,8 @@ class Individual(metaclass=abc.ABCMeta):
         self.health = self.individual_config['start_health']
         self.poison = self.individual_config['start_poison']
         self.color = color
+        self.strength = self.individual_config['default_strength']
+
         # if a position was given
         if not position:
             _left_border = 0
@@ -66,6 +68,7 @@ class Individual(metaclass=abc.ABCMeta):
         application of force 
         """
         self.acceleration += force
+        self.acceleration = self.limit(self.acceleration, self.max_speed)
 
 
     def seek(self, game_objects, seek_pop):
@@ -163,8 +166,8 @@ class Individual(metaclass=abc.ABCMeta):
             return self.calc_force(closest, desire, inverse)
         # also set current visible items to be checked in next frame
         self.last_tick_seen[type] = seen
-        # return empty steering force
-        return np.array([0,0])
+        # return none
+        return None
 
 
     def eat_corpse(self, element, game_objects):
@@ -218,8 +221,7 @@ class Individual(metaclass=abc.ABCMeta):
         distance = self.dist(element[0]._position, attack_pos)
         if distance <= element[0].radius:
             # deal dmg to element[0]
-            dmg = 0.05 # TODO: change this
-            element[0].health -= dmg
+            element[0].health -= self.strength
             # repell self a little in opposite direction
             steer = self.velocity * -1
             steer = self.limit(steer, self.max_force*pow(10,10))

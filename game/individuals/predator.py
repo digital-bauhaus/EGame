@@ -18,6 +18,8 @@ class Predator(Individual):
         self.desires = Desires(self.predator_config["default_desires"], True)
         self.radius = self.predator_config['size']
 
+        self.strength = self.predator_config['default_strength']
+
         # we want that the predators spawn outside of the game area        
         _left_border = 0
         _right_border = int(self.parent.frame_dimension[0])
@@ -66,9 +68,10 @@ class Predator(Individual):
             self.apply_force(corpse_force)
             force_applied = True
             self.poison = 1
+        print(force_applied)
         if not force_applied:
             # calculate the steering vector
-            steer = self.velocity
+            steer = self.velocity * 100
             # limit the steering
-            steer = self.limit(steer, self.max_force)
+            # steer = self.set_magnitude(steer, self.max_force)
             self.apply_force(steer)

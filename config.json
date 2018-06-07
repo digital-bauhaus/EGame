@@ -37,6 +37,7 @@
                 "start_health": 1,
                 "min_poison": 1,
                 "start_poison": 1,
+                "default_strength": 0.05,
                 "use_default_desires": false,
                 "default_desires": {
                     "_comment": "sum of all has to be 1",
@@ -78,6 +79,7 @@
                 "size": 20,
                 "speed_factor": 0.5,
                 "color": [139, 69, 19],
+                "default_strength": 0.05,
                 "default_perception": {
                     "_comment": "sum of all has to be 1",
                     "absolute": 150,

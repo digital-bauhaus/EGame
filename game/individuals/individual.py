@@ -22,7 +22,8 @@ class Individual(metaclass=abc.ABCMeta):
         
         # standard parameter
         self.statistic = Statistic()
-        self.health = self.individual_config['start_health']
+        self.max_health = self.individual_config['max_health']
+        self.health = self.max_health
         self.poison = self.individual_config['start_poison']
         self.color = color
         self.strength = self.individual_config['default_strength']
@@ -258,14 +259,13 @@ class Individual(metaclass=abc.ABCMeta):
         self.health -= 0.0005 * self.poison
 
 
-    # TODO: max health should be limited on config max_health and not on 1
     def increase_health(self, nutrition):
         """
         increase own health if called by given nutrition
         """
         self.health += nutrition
-        if self.health > 1.0:
-            self.health = 1.0
+        if self.health > self.max_health:
+            self.health = self.max_health
 
 
     def stay_in_boundaries(self, boundary):

@@ -34,7 +34,6 @@
                 "max_speed": 3,
                 "max_force": 0.25,
                 "max_health": 1,
-                "start_health": 1,
                 "min_poison": 1,
                 "start_poison": 1,
                 "default_strength": 0.05,

@@ -68,7 +68,6 @@ class Predator(Individual):
             self.apply_force(corpse_force)
             force_applied = True
             self.poison = 1
-        print(force_applied)
         if not force_applied:
             # calculate the steering vector
             steer = self.velocity * 100

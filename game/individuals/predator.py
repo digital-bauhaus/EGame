@@ -42,3 +42,33 @@ class Predator(Individual):
        increment the hit counter for the attacked enemy
        """
        individual.statistic.attacked_by_predators += 1
+
+    def seek_populations(self, game_objects, opponents):
+        """
+        seek elements called by predators
+        """
+        force_applied = False
+        for pop in opponents:
+            opponent_force = self.seek_object(game_objects,
+                                              pop,
+                                              self.perception.opponent,
+                                              self.attack_opponent,
+                                              self.desires.seek_opponents)
+            if opponent_force is not None:
+                self.apply_force(opponent_force)
+                force_applied = True
+        corpse_force = self.seek_object(game_objects,
+                                        "corpse",
+                                        self.perception.corpse,
+                                        self.eat_corpse,
+                                        self.desires.seek_corpse)
+        if corpse_force is not None:
+            self.apply_force(corpse_force)
+            force_applied = True
+            self.poison = 1
+        if not force_applied:
+            # calculate the steering vector
+            steer = self.velocity
+            # limit the steering
+            steer = self.limit(steer, self.max_force)
+            self.apply_force(steer)

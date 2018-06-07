@@ -59,7 +59,7 @@ class Individual(metaclass=abc.ABCMeta):
         # speed up
         self.velocity += self.acceleration
         # the velocity of an object should be limited
-        self.velocity = self.limit(self.velocity, self.max_speed)
+        self.velocity = self.limit(self.velocity, self.get_own_max_speed())
         self._position += self.velocity
         # reset acceleration after each iteration
         self.acceleration *= 0
@@ -70,7 +70,7 @@ class Individual(metaclass=abc.ABCMeta):
         application of force 
         """
         self.acceleration += force
-        self.acceleration = self.limit(self.acceleration, self.max_speed)
+        self.acceleration = self.limit(self.acceleration, self.get_own_max_speed())
 
 
     def seek(self, game_objects, seek_pop):
@@ -244,7 +244,7 @@ class Individual(metaclass=abc.ABCMeta):
         if inverse:
             desired = - desired
         # set the desired vector length to max
-        desired = self.set_magnitude(desired, self.max_speed)
+        desired = self.set_magnitude(desired, self.get_own_max_speed())
         # calculate the steering vector
         steer = desired - self.velocity
         # limit the steering
@@ -280,18 +280,28 @@ class Individual(metaclass=abc.ABCMeta):
         h = self.parent.frameGeometry().height()
 
         if self._position[0] < boundary:
-            desired = self.create_vector(self.max_speed, self.velocity[1])
+            desired = self.create_vector(self.get_own_max_speed(), self.velocity[1])
         if self._position[0] > w - 2 * boundary:
-            desired = self.create_vector(-self.max_speed, self.velocity[1])
+            desired = self.create_vector(-self.get_own_max_speed(), self.velocity[1])
         if self._position[1] < boundary:
-            desired = self.create_vector(self.velocity[0], self.max_speed)
+            desired = self.create_vector(self.velocity[0], self.get_own_max_speed())
         if self._position[1] > h - 2 * boundary:
-            desired = self.create_vector(self.velocity[0], -self.max_speed)
+            desired = self.create_vector(self.velocity[0], -self.get_own_max_speed())
         if desired is not None:
-            desired *= self.max_speed
+            desired *= self.get_own_max_speed()
             steer = desired - self.velocity
             steer = self.limit(steer, self.max_force/2)
             self.apply_force(steer)
+
+
+    def get_own_max_speed(self):
+        """
+        wrapper for individuals / predator max speed calculation
+        """
+        if self.abilities is not None:
+            return self.abilities.calc_max_speed(self.max_speed)
+        else:
+            return self.max_speed
 
 
     def create_vector(self, x, y):

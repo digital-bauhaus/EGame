@@ -2,6 +2,7 @@ import numpy as np
 
 class Desires:
     def __init__(self, config, default=False):
+        self.absolute = config['absolute']
         if default:
             self.seek_food = config['seek_food']
             self.dodge_poison = config['dodge_poison']

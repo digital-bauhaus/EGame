@@ -36,9 +36,10 @@
                 "max_health": 1,
                 "min_poison": 1,
                 "start_poison": 1,
-                "default_strength": 0.05,
+                "default_strength": 0.1,
                 "use_default_desires": false,
                 "default_desires": {
+                    "absolute": 1,
                     "_comment": "sum of all has to be 1",
                     "seek_food": 0.5,
                     "dodge_poison": 0.5,
@@ -52,8 +53,8 @@
                 },
                 "use_default_perception": false,
                 "default_perception": {
-                    "_comment": "sum of all has to be 1",
                     "absolute": 300,
+                    "_comment": "sum of all has to be 1",
                     "food": 0.4,
                     "poison": 0.3,
                     "health_potion": 0.4,
@@ -63,11 +64,11 @@
                     "rainbow_drop": 0,
                     "aoe": 0
                 },
-                "use_default_abilities": false,
+                "use_default_abilities": true,
                 "default_abilities": {
+                    "absolute": 50,
                     "_comment": "sum of all has to be 1",
-                    "increased_armor_opponents": 1,
-                    "increased_armor_predators": 1,
+                    "increased_armor": 1,
                     "speed": 1,
                     "poison_resistance": 1,
                     "reduced_breeding_time": 1,
@@ -92,6 +93,7 @@
                     "aoe": 0
                 },
                 "default_desires": {
+                    "absolute": 1,
                     "_comment": "sum of all has to be 1",
                     "seek_food": 0,
                     "dodge_poison": 0,
@@ -103,6 +105,9 @@
                     "seek_aoe": 0,
                     "dodge_aoe": 0
                 }
+            },
+            "ability_base": {
+                "armor_dmg_reduce": 0.8
             },
             "items": {
                 "food": {

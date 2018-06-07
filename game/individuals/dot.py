@@ -17,7 +17,8 @@ class Dot(Individual):
                                      self.individual_config['use_default_perception'])
         self.desires = Desires(self.individual_config['default_desires'],
                                self.individual_config['use_default_desires'])
-        self.abilities = Ability(self.individual_config['default_abilities'],
+        self.abilities = Ability(self.ability_base,
+                                 self.individual_config['default_abilities'],
                                  self.individual_config['use_default_abilities'])
         self.dead = False
 

@@ -19,6 +19,7 @@ class Individual(metaclass=abc.ABCMeta):
         self.config = self.parent.config
         self.individual_config = self.config.individuals
         self.predator_config = self.config.predators
+        self.ability_base = self.config.ability_base
         
         # standard parameter
         self.statistic = Statistic()
@@ -222,7 +223,8 @@ class Individual(metaclass=abc.ABCMeta):
         distance = self.dist(element[0]._position, attack_pos)
         if distance <= element[0].radius:
             # deal dmg to element[0]
-            element[0].health -= self.strength
+            dmg_dealt = element[0].abilities.calc_dmg_on_armor(self.strength)
+            element[0].health -= dmg_dealt
             # repell self a little in opposite direction
             steer = self.velocity * -1
             steer = self.limit(steer, self.max_force*pow(10,10))

@@ -26,7 +26,9 @@
                 "num_heal_potion": 3,
                 "spawn_prob_heal_potion": 0.01,
                 "num_predators": 5,
-                "spawn_prob_predators": 0.005
+                "spawn_prob_predators": 0.005,
+                "_breeding_frame": 1000,
+                "breeding_frame": 300
             },
             "individuals": {
                 "start_size": 10,

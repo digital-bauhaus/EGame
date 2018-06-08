@@ -10,16 +10,28 @@ class Dot(Individual):
                  parent,
                  position=None,
                  radius=None,
-                 color=None):
+                 color=None,
+                 abilities=None,
+                 desires=None,
+                 perception=None):
         Individual.__init__(self, parent, color, radius, position)
         # an individual has perceptions, desires and abilities
-        self.perception = Perception(self.individual_config['default_perception'],
-                                     self.individual_config['use_default_perception'])
-        self.desires = Desires(self.individual_config['default_desires'],
-                               self.individual_config['use_default_desires'])
-        self.abilities = Ability(self.ability_base,
-                                 self.individual_config['default_abilities'],
-                                 self.individual_config['use_default_abilities'])
+        if perception is None:
+            self.perception = Perception(self.individual_config['default_perception'],
+                                        self.individual_config['use_default_perception'])
+        else:
+            self.perception = perception
+        if desires is None:
+            self.desires = Desires(self.individual_config['default_desires'],
+                                self.individual_config['use_default_desires'])
+        else:
+            self.desires = desires
+        if abilities is None:
+            self.abilities = Ability(self.ability_base,
+                                    self.individual_config['default_abilities'],
+                                    self.individual_config['use_default_abilities'])
+        else:
+            self.abilities = abilities
         self.dead = False
 
     def add_attack_count(self, individual):

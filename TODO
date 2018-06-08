@@ -1,0 +1,8 @@
+Egame:
+  ☐ Graphics
+    ☐ PNG
+    ☐ Predator -> Spiders
+    ☐ Background images
+    ☐ Item images (heart for potion | corn for food | etc)
+  ☐ Game end
+  ☐ Script for running multiple times (eg.: 100x)

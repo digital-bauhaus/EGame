@@ -1,6 +1,6 @@
 
 import numpy as np
-from random import uniform
+from random import uniform, randint, choice
 from game.individuals.dot import Dot
 from game.individuals.predator import Predator
 from game.items.food import Food
@@ -32,6 +32,8 @@ class EGame:
         self.spawn_prob_predator = self.global_parameter['spawn_prob_predators']
     
         self.item_config = self.config.items
+
+        self.breeding_timer = 0
 
         # blueish
         self.color_pop1 = (100, 100, 255)
@@ -69,12 +71,53 @@ class EGame:
     def update(self):
         """
         update all game elements frame by frame
+        increment breeding timer and apply breeding
         """
         self.update_population(self.game_objects['pop1'], opponent="pop2")
         self.update_population(self.game_objects['pop2'], opponent="pop1")
         self.update_predators(self.game_objects['predators'])
         self.create_items()
+        self.breeding_timer += 1
+        if self.breeding_timer == self.global_parameter['breeding_frame']:
+            self.breed('pop1', optimizer=None)
+            self.breed('pop2', optimizer=None)
+            self.breeding_timer = 0
     
+
+    def breed(self, population, optimizer):
+        """
+        breed populations with given optimizer
+        """
+        # TODO: adjust this  --- this is the entrypoint for the genetic algorithms!
+        print("BREEDING TIME")
+
+        dead =  []
+        alive = []
+        for individual in self.game_objects[population]:
+            if individual.dead:
+                dead.append(individual)
+            else:
+                alive.append(individual)
+
+        if len(alive) == 0:
+            print("END OF BREED")
+            return
+        for _ in range(len(dead)):
+            dead_individual = choice(dead)
+            alive_individual = choice(alive)
+
+
+            new_individual = Dot(self.parent, 
+                                 color=dead_individual.color,
+                                 position=alive_individual._position,
+                                 abilities=dead_individual.abilities,
+                                 desires=dead_individual.desires,
+                                 perception=dead_individual.perception)
+            self.game_objects[population].append(new_individual)
+        for dead_individual in dead:
+            self.game_objects[population].remove(dead_individual)
+
+
     
     def create_items(self):
         """

@@ -29,8 +29,8 @@ class Individual(metaclass=abc.ABCMeta):
         self.color = color
         self.strength = self.individual_config['default_strength']
 
-        # if a position was given
-        if not position:
+        # if a position was not given
+        if position is None:
             _left_border = 0
             _right_border = int(self.parent.frame_dimension[0])
             _top_border = 0
@@ -39,7 +39,7 @@ class Individual(metaclass=abc.ABCMeta):
             _y = float(randint(_top_border, _bottom_border))
             self._position = np.array([_x, _y])
         else:
-            self._position = position
+            self._position = np.array([position[0], position[1]])
         # if a radius was given
         if not radius:
             self.radius = self.individual_config['start_size']

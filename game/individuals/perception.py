@@ -9,8 +9,8 @@ class Perception:
             self.corpse = config['corpse']
             self.opponent = config['opponent']
             self.predator = config['predator']
-            self.rainbow_drop = config['rainbow_drop']
-            self.aoe = config['aoe']
+            # self.rainbow_drop = config['rainbow_drop']
+            # self.aoe = config['aoe']
         else:
             init_values = np.random.dirichlet(np.ones(6), size=1)[0]
             self.food = init_values[0]
@@ -28,3 +28,11 @@ class Perception:
         all perceptions are percentages of the absolute value 
         """
         return type * self.absolute_val
+
+    def print(self):
+        print("food perception", self.food)
+        print("poison perception", self.poison)
+        print("health potion perception", self.health_potion)
+        print("corpse perception", self.corpse)
+        print("opponent perception", self.opponent)
+        print("predator perception", self.predator)

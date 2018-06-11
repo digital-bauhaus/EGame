@@ -38,3 +38,19 @@ class Statistic:
             self.opponents_seen += 1
         else:
             raise Exception("statistic increment error! " + type + " not found")
+
+    def print(self):
+        print("frames survived", self.time_survived)
+        print("food eaten", self.food_eaten)
+        print("poison eaten", self.poison_eaten)
+        print("consumed health potions", self.consumed_potions)
+        print("consumed corpses", self.consumed_corpses)
+        print("enemies attacked", self.enemies_attacked)
+        print("attacked by opponents", self.attacked_by_opponents)
+        print("attacked by predators", self.attacked_by_predators)
+        print("food seen", self.food_seen)
+        print("poison seen", self.poison_seen)
+        print("health potions seen", self.potions_seen)
+        print("opponents seen", self.opponents_seen)
+        print("predators seen", self.predators_seen)
+        print("corpses seen", self.corpses_seen)

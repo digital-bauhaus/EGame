@@ -14,16 +14,16 @@ class Ability:
             # 1 means full max_speed_increase is applied
             # (e.g double speed with max_speed_increase = 1)
             self.speed = config['speed']
-            self.poison_resistance = config['poison_resistance']
-            self.reduced_breeding_time = config['reduced_breeding_time']
-            self.poisoness = config['poisoness']
+            # self.poison_resistance = config['poison_resistance']
+            # self.reduced_breeding_time = config['reduced_breeding_time']
+            # self.poisoness = config['poisoness']
         else:
             init_values = np.random.dirichlet(np.ones(5), size=1)[0]
             self.increased_armor = init_values[0]
             self.speed = init_values[1]
-            self.poison_resistance = init_values[2]
-            self.reduced_breeding_time = init_values[3]
-            self.poisoness = init_values[4]
+            self.poison_resistance = init_values[2] #TODO
+            self.reduced_breeding_time = init_values[3] #TODO
+            self.poisoness = init_values[4] #TODO
 
 
     def calc_dmg_on_armor(self, dmg):
@@ -38,3 +38,7 @@ class Ability:
         applies speed stats to own max speed
         """
         return max_speed + self.speed * self.max_speed_increase
+
+    def print(self):
+        print("increased armor ability", self.increased_armor)
+        print("speed ability", self.speed)

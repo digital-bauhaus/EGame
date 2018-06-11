@@ -7,14 +7,14 @@ import numpy as np
 
 class Dot(Individual):
     def __init__(self,
-                 parent,
+                 parent_canvas,
                  position=None,
                  radius=None,
                  color=None,
                  abilities=None,
                  desires=None,
                  perception=None):
-        Individual.__init__(self, parent, color, radius, position)
+        Individual.__init__(self, parent_canvas, color, radius, position)
         # an individual has perceptions, desires and abilities
         if perception is None:
             self.perception = Perception(self.individual_config['default_perception'],
@@ -88,3 +88,14 @@ class Dot(Individual):
         table_widget.setItem(28, index, QTableWidgetItem(str(self.statistic.opponents_seen)))
         table_widget.setItem(29, index, QTableWidgetItem(str(self.statistic.predators_seen)))
         table_widget.setItem(30, index, QTableWidgetItem(str(self.statistic.corpses_seen)))
+
+    def print_all_details(self):
+        print("is dead", self.dead)
+        # desires
+        self.desires.print()
+        # perceptions
+        self.perception.print()
+        # abilities
+        self.abilities.print()
+        # statistics
+        self.statistic.print()

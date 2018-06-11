@@ -45,6 +45,7 @@ class EGame:
         self.colors["pop2"] = [(255, 165, 0), "yellow"]
 
         self.game_objects = {}
+        self.running = False
    
 
     def start(self):
@@ -70,6 +71,8 @@ class EGame:
             self.game_objects['poison'].append(Poison(self.parent, self.border_width))
         for _ in range(self.num_health_potions):
             self.game_objects['health_potion'].append(HealPotion(self.parent, self.border_width))
+        
+        self.running = True
 
 
     def update(self):
@@ -208,13 +211,14 @@ class EGame:
                     all_dead = False
                     break
             if all_dead:
-                print(self.colors[pop][1], "loses")
+                print(self.colors[pop][1], "lost")
                 winner = (j + 1) % 2
                 w_str = self.colors[pops[winner]][1]
 
                 self.parent.msg2Statusbar.emit(
                     str("Game Over! " + w_str + " wins!"))
         print("end of game")
+        self.running = False
         return winner
         # TODO: print results to logfile in order to analyze it later
 
@@ -247,23 +251,24 @@ class EGame:
         """
         draw all game elements on the frame
         """
-        self.draw_border(painter)
-        for f in self.game_objects['food']:
-            f.draw(painter)
-        for p in self.game_objects['poison']:
-            p.draw(painter)
-        for p in self.game_objects['pop1']:
-            if not p.dead:
+        if not self.parent.parent_window.fastmode:
+            self.draw_border(painter)
+            for f in self.game_objects['food']:
+                f.draw(painter)
+            for p in self.game_objects['poison']:
                 p.draw(painter)
-        for p in self.game_objects['pop2']:
-            if not p.dead:
+            for p in self.game_objects['pop1']:
+                if not p.dead:
+                    p.draw(painter)
+            for p in self.game_objects['pop2']:
+                if not p.dead:
+                    p.draw(painter)
+            for h in self.game_objects['health_potion']:
+                h.draw(painter)
+            for c in self.game_objects['corpse']:
+                c.draw(painter)
+            for p in self.game_objects['predators']:
                 p.draw(painter)
-        for h in self.game_objects['health_potion']:
-            h.draw(painter)
-        for c in self.game_objects['corpse']:
-            c.draw(painter)
-        for p in self.game_objects['predators']:
-            p.draw(painter)
 
     
     def draw_border(self, painter):

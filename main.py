@@ -10,12 +10,19 @@ if __name__ == "__main__":
     # program parameter:
     # config.path optimizer1 optimizer2
 
-    if len(sys.argv) != 4:
+    if len(sys.argv) < 4:
         print("Wrong number of parameter! call: python3 ./main.py /path/to/config.json /path/to/optimizer1 /path/to/optimizer2")
         sys.exit(0)
     config_path = sys.argv[1]
     optimizer1_path = sys.argv[2]
     optimizer2_path = sys.argv[3]
+
+    # fast mode additional parameter: bool enabled, int runs
+    fastmode = False
+    fastmode_runs = 0
+    if len(sys.argv) > 4:
+        fastmode = sys.argv[4]
+        fastmode_runs = int(sys.argv[5])
 
     config = Config(config_path)
 
@@ -29,6 +36,6 @@ if __name__ == "__main__":
     spec2.loader.exec_module(module2)
 
     app = QApplication(sys.argv)
-    GUI = App(config, [module1, module2])
+    GUI = App(config, [module1, module2], fastmode, fastmode_runs)
     GUI.show()
     sys.exit(app.exec_())

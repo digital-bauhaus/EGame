@@ -4,11 +4,14 @@ from PyQt5.QtGui import QIcon
 from .game_frame import GameFrame
 
 import math
+from time import sleep
 
 class App(QMainWindow):
-    def __init__(self, config, optimizers, parent=None):
+    def __init__(self, config, optimizers, fastmode=False, fastmode_runs=0, parent=None):
         super(App, self).__init__(parent=parent)
         self.config = config
+        self.fastmode = fastmode
+        self.fastmode_runs = fastmode_runs
         self.optimizers = optimizers
         self.global_config = self.config.global_config
         self.padding = (200, 200)
@@ -21,6 +24,13 @@ class App(QMainWindow):
 
         self.initUI()
 
+        # if we have fastmode - run the game for the given amount
+        if self.fastmode:
+            for i in range(self.fastmode_runs):
+                print("run", i+1, "of", self.fastmode_runs)
+                game_frame = GameFrame(self)
+                game_frame.start()
+                #TODO: collect results
 
     def init_debug(self):
         """

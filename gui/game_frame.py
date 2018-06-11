@@ -16,7 +16,10 @@ class GameFrame(QFrame):
         self.global_config = parent.global_config
         self.frame_dimension = (self.global_config['frame']['width'],
                                 self.global_config['frame']['height'])
-        self.game_speed = self.global_config['game_speed']
+        if self.parent_window.fastmode:
+            self.game_speed = 0
+        else:
+            self.game_speed = self.global_config['game_speed']
         self.init_frame()
         self.setFixedSize(self.frame_dimension[0],
                           self.frame_dimension[1])

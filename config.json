@@ -28,7 +28,7 @@
                 "num_predators": 15,
                 "spawn_prob_predators": 0.005,
                 "_breeding_frame": 1000,
-                "breeding_frame": 300
+                "breeding_frame": 2000
             },
             "individuals": {
                 "start_size": 10,

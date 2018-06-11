@@ -7,6 +7,9 @@ from game.items.food import Food
 from game.items.poison import Poison
 from game.items.heal_potion import HealPotion
 from game.items.corpse import Corpse
+# TODO: this has to be a program parameter
+from genetic_algorithm.breeder import Breeder as Breeder_pop1
+from genetic_algorithm.breeder import Breeder as Breeder_pop2
 
 from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen
 from PyQt5.QtCore import QPoint, Qt
@@ -35,10 +38,11 @@ class EGame:
 
         self.breeding_timer = 0
 
+        self.colors = {}
         # blueish
-        self.color_pop1 = (100, 100, 255)
+        self.colors["pop1"] = [(100, 100, 255), "blue"]
         # orangish
-        self.color_pop2 = (255, 165, 0)
+        self.colors["pop2"] = [(255, 165, 0), "yellow"]
 
         self.game_objects = {}
    
@@ -58,8 +62,8 @@ class EGame:
         self.game_objects['predators'] = []
 
         for _ in range(self.num_individuals):
-            self.game_objects['pop1'].append(Dot(self.parent, color=self.color_pop1))
-            self.game_objects['pop2'].append(Dot(self.parent, color=self.color_pop2))
+            self.game_objects['pop1'].append(Dot(self.parent, color=self.colors['pop1'][0]))
+            self.game_objects['pop2'].append(Dot(self.parent, color=self.colors['pop2'][0]))
         for _ in range(self.num_food):
             self.game_objects['food'].append(Food(self.parent, self.border_width))
         for _ in range(self.num_poison):
@@ -79,8 +83,11 @@ class EGame:
         self.create_items()
         self.breeding_timer += 1
         if self.breeding_timer == self.global_parameter['breeding_frame']:
-            self.breed('pop1', optimizer=None)
-            self.breed('pop2', optimizer=None)
+            print("BREEDING TIME")
+            self.breed(
+                'pop1', optimizer=self.parent.parent_window.optimizers[0])
+            self.breed(
+                'pop2', optimizer=self.parent.parent_window.optimizers[1])
             self.breeding_timer = 0
     
 
@@ -88,34 +95,8 @@ class EGame:
         """
         breed populations with given optimizer
         """
-        # TODO: adjust this  --- this is the entrypoint for the genetic algorithms!
-        print("BREEDING TIME")
-
-        dead =  []
-        alive = []
-        for individual in self.game_objects[population]:
-            if individual.dead:
-                dead.append(individual)
-            else:
-                alive.append(individual)
-
-        if len(alive) == 0:
-            print("END OF BREED")
-            return
-        for _ in range(len(dead)):
-            dead_individual = choice(dead)
-            alive_individual = choice(alive)
-
-
-            new_individual = Dot(self.parent, 
-                                 color=dead_individual.color,
-                                 position=alive_individual._position,
-                                 abilities=dead_individual.abilities,
-                                 desires=dead_individual.desires,
-                                 perception=dead_individual.perception)
-            self.game_objects[population].append(new_individual)
-        for dead_individual in dead:
-            self.game_objects[population].remove(dead_individual)
+        breeder = optimizer.Breeder(self.parent)
+        self.game_objects[population] = breeder.breed(self.game_objects[population])
 
 
     
@@ -183,6 +164,8 @@ class EGame:
         """
         update all individuals in all populations
         """
+        # check variable for end of session
+        all_dead = True
         for i in population:
             # if the individual is not dead
             if not i.dead:
@@ -195,6 +178,8 @@ class EGame:
                                                             position=i._position))
                     i.dead = True
                     continue
+                # there is still an individual living
+                all_dead = False
                 # it survived a frame longer
                 i.increment_survived_time()
                 # apply seek algorithm
@@ -203,6 +188,35 @@ class EGame:
                 i.stay_in_boundaries(self.border_width)
                 # apply acceleration to velocity
                 i.update()
+
+        # check if all individuals are dead
+        if all_dead:
+            self.end_game()
+
+    
+    def end_game(self):
+        # stop the update timer
+        self.parent.stop_timer()
+        # who wins?
+        pops = ["pop1", "pop2"]
+        winner = None
+        for j in range(len(pops)):
+            pop = pops[j]
+            all_dead = True
+            for i in self.game_objects[pop]:
+                if not i.dead:
+                    all_dead = False
+                    break
+            if all_dead:
+                print(self.colors[pop][1], "loses")
+                winner = (j + 1) % 2
+                w_str = self.colors[pops[winner]][1]
+
+                self.parent.msg2Statusbar.emit(
+                    str("Game Over! " + w_str + " wins!"))
+        print("end of game")
+        return winner
+        # TODO: print results to logfile in order to analyze it later
 
     
     def update_predators(self, predators):

@@ -28,6 +28,7 @@ class StatisticsWidget(QWidget):
                          self.height)
         
         self.table_widget = QTableWidget()
+        # TODO: set dynamic row and column
         self.table_widget.setRowCount(31)  # attributes
         self.table_widget.setColumnCount(20)  # individuals
 

@@ -19,13 +19,13 @@
                 "num_individuals": 10,
                 "num_food": 25,
                 "spawn_prob_food": 0.1,
-                "num_poison": 20,
+                "num_poison": 30,
                 "spawn_prob_poison": 0.1,
                 "num_rainbow_drops": 5,
                 "spawn_prob_rainbow_drops": 0.01,
                 "num_heal_potion": 3,
                 "spawn_prob_heal_potion": 0.01,
-                "num_predators": 5,
+                "num_predators": 15,
                 "spawn_prob_predators": 0.005,
                 "_breeding_frame": 1000,
                 "breeding_frame": 300
@@ -66,7 +66,7 @@
                     "rainbow_drop": 0,
                     "aoe": 0
                 },
-                "use_default_abilities": true,
+                "use_default_abilities": false,
                 "default_abilities": {
                     "absolute": 1,
                     "_comment": "sum of all has to be 1",

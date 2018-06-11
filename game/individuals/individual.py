@@ -362,6 +362,8 @@ class Individual(metaclass=abc.ABCMeta):
         magnitude by keeping the direction
         """
         length = np.linalg.norm(vector)
+        if length == 0:
+            return vector
         percentage = magnitude / length
         return vector * percentage
 

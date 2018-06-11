@@ -67,6 +67,10 @@ class GameFrame(QFrame):
             self.refresh_statistic_window()
 
 
+    def stop_timer(self):
+        self.timer.stop()
+
+
     def timerEvent(self, event):
         """
         timer event is called by timer.start()

@@ -6,9 +6,10 @@ from .game_frame import GameFrame
 import math
 
 class App(QMainWindow):
-    def __init__(self, config, parent=None):
+    def __init__(self, config, optimizers, parent=None):
         super(App, self).__init__(parent=parent)
         self.config = config
+        self.optimizers = optimizers
         self.global_config = self.config.global_config
         self.padding = (200, 200)
         self.resolution = (self.global_config['window']['width'],

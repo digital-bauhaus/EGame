@@ -122,7 +122,7 @@
                 "food": {
                     "size": 5,
                     "color": "green",
-                    "image": "",
+                    "image": "./img/food4_scaled20.png",
                     "nutrition": 0.1
                 },
                 "poison": {

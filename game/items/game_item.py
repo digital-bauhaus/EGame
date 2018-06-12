@@ -1,6 +1,9 @@
 import numpy as np
 from random import randint
 
+from PyQt5.QtGui import QImage
+from PyQt5.QtCore import QPointF
+
 
 class GameItem():
     def __init__(self, parent, boundary, position=None):
@@ -17,3 +20,9 @@ class GameItem():
             self._position = np.array([_x, _y])
         else:
             self._position = position
+
+    def draw_image(self, painter):
+        item_image = QImage(self.image)
+        painter.drawImage(QPointF(self._position[0]-(item_image.height()/2), 
+                                  self._position[1]-(item_image.width()/2)), 
+                                  item_image)

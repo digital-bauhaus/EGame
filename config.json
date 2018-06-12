@@ -24,7 +24,7 @@
                 "spawn_prob_poison": 0.1,
                 "num_rainbow_drops": 5,
                 "spawn_prob_rainbow_drops": 0.01,
-                "num_heal_potion": 3,
+                "num_heal_potion": 10,
                 "spawn_prob_heal_potion": 0.01,
                 "num_predators": 15,
                 "spawn_prob_predators": 0.005,
@@ -117,26 +117,32 @@
                 "food": {
                     "size": 5,
                     "color": "green",
+                    "image": "",
                     "nutrition": 0.1
                 },
                 "poison": {
                     "size": 5,
                     "color": "red",
+                    "image": "",
                     "poisonness": 1
                 },
                 "rainbow_drops": {
                     "size": 5,
                     "color": "rainbow",
+                    "image": "",
                     "probability": 0.5
                 },
                 "corpse": {
                     "size": 10,
                     "color": "brown",
+                    "image": "",
                     "nutrition": 0.2
                 },
                 "heal_potion": {
                     "size": 8,
-                    "color": "violet"
+                    "color": "violet",
+                    "_image": "./img/hp_potion_shadow.png",
+                    "image": "./img/hp_potion_shaddow_scaled20.png"
                 }
             },
             "environment": {

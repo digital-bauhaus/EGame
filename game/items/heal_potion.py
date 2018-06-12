@@ -1,5 +1,5 @@
 from game.items.game_item import GameItem
-from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPolygonF
+from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPolygonF, QImage
 from PyQt5.QtCore import QPointF
 
 class HealPotion(GameItem):
@@ -8,8 +8,15 @@ class HealPotion(GameItem):
         self.health_potion_config = self.items_config['heal_potion']
         self.size = self.health_potion_config['size']
         self.color = self.health_potion_config['color']
+        self.image = self.health_potion_config['image']
 
     def draw(self, painter):
+        if self.image is "":
+            self.draw_polygon(painter)
+        else:
+            self.draw_image(painter)
+
+    def draw_polygon(self, painter):
         color = QColor(self.color)
         painter.setPen(QColor(0, 0, 0))
         painter.setBrush(color)

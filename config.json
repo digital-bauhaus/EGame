@@ -12,7 +12,8 @@
                 "frame": {
                     "width": 800,
                     "height": 600,
-                    "background_color": "rgb(255,255,255)"
+                    "background_color": "rgb(255,255,255)",
+                    "background_image": "url(./img/background_green2.png)"
                 },
                 "game_speed": 20,
                 "border_width": 20,

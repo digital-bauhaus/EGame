@@ -23,8 +23,11 @@ class GameFrame(QFrame):
         self.init_frame()
         self.setFixedSize(self.frame_dimension[0],
                           self.frame_dimension[1])
-        self.setStyleSheet("background-color: " + \
-            self.global_config['frame']['background_color'])
+        #self.setStyleSheet("background-color: " + \
+        #    self.global_config['frame']['background_color'])
+        self.setStyleSheet("background-image: " + \
+            self.global_config['frame']['background_image'])
+        
 
 
     def open_statistics(self):

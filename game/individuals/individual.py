@@ -27,7 +27,7 @@ class Individual(metaclass=abc.ABCMeta):
         self.health = self.max_health
         self.poison = self.individual_config['start_poison']
         self.color = color
-        self.strength = self.individual_config['default_strength']
+        self.default_dmg = self.individual_config['default_dmg']
 
         # if a position was not given
         if position is None:
@@ -213,24 +213,14 @@ class Individual(metaclass=abc.ABCMeta):
             game_objects["food"].remove(element[0])
             self.statistic.food_eaten += 1
 
-
+    @abc.abstractmethod
     def attack_opponent(self, element, game_objects):
         """
-        attack an individual if own position + own velocity is in opponent radius
+        abstract method to attack an individual
+        this function differs from dot to predator
+        since predators don't have abilities
         """
-        attack_vec = self.set_magnitude(self.velocity, self.radius)
-        attack_pos = self._position + attack_vec
-        distance = self.dist(element[0]._position, attack_pos)
-        if distance <= element[0].radius:
-            # deal dmg to element[0]
-            dmg_dealt = element[0].abilities.calc_dmg_on_armor(self.strength)
-            element[0].health -= dmg_dealt
-            # repell self a little in opposite direction
-            steer = self.velocity * -1
-            steer = self.limit(steer, self.max_force*pow(10,10))
-            self.apply_force(steer)
-            self.add_attack_count(element[0])
-            self.statistic.enemies_attacked += 1
+        pass
 
 
     def calc_force(self, element, desire, inverse = False):

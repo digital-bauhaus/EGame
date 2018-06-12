@@ -14,16 +14,25 @@ class Ability:
             # 1 means full max_speed_increase is applied
             # (e.g double speed with max_speed_increase = 1)
             self.speed = config['speed']
+            self.strength = config['strength']
             # self.poison_resistance = config['poison_resistance']
             # self.reduced_breeding_time = config['reduced_breeding_time']
             # self.poisoness = config['poisoness']
         else:
-            init_values = np.random.dirichlet(np.ones(5), size=1)[0]
+            init_values = np.random.dirichlet(np.ones(6), size=1)[0]
             self.armor_ability = init_values[0]
             self.speed = init_values[1]
+            self.strength = init_values[2]
             self.poison_resistance = init_values[2] #TODO
             self.reduced_breeding_time = init_values[3] #TODO
             self.poisoness = init_values[4] #TODO
+
+
+    def calc_dmg_with_strength(self, dmg):
+        """
+        applies dmg multiplier to dmg dealt
+        """
+        return (1 + self.strength) * dmg
 
 
     def calc_dmg_on_armor(self, dmg):

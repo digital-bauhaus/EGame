@@ -5,6 +5,7 @@ class Ability:
         self.max_dmg_reduce_by_armor = ability_base['armor_dmg_reduce']
         self.max_speed_increase = ability_base['max_speed_increase']
         self.max_poison_reduce = ability_base['max_poison_reduce']
+        self.toxicity_max_dmg = ability_base['toxicity_max_dmg']
         if default:
             # increased armor controls how much dmg is taken if attacked
             # 0 means full dmg is taken
@@ -23,16 +24,26 @@ class Ability:
             # 0 means full poison is applied each frame
             # 1 means max poison reduce is applied each frame
             self.poison_resistance = config['poison_resistance']
+            # toxicity controls how much opponents receive dmg when they attack
+            # 0 means that no dmg is dealt
+            # 1 means toxicity_max_dmg is dealt
+            self.toxicity = config['toxicity']
             # self.reduced_breeding_time = config['reduced_breeding_time']
-            # self.poisoness = config['poisoness']
         else:
             init_values = np.random.dirichlet(np.ones(6), size=1)[0]
             self.armor_ability = init_values[0]
             self.speed = init_values[1]
             self.strength = init_values[2]
             self.poison_resistance = init_values[3]
-            self.reduced_breeding_time = init_values[4] #TODO
-            self.poisoness = init_values[5] #TODO
+            self.toxicity = init_values[4]  # TODO
+            self.reduced_breeding_time = init_values[5] #TODO
+
+
+    def calc_dmg_dealt_by_toxicity(self):
+        """
+        calculates the dmg dealt to attacker based on own toxicity
+        """
+        return self.toxicity * self.toxicity_max_dmg
 
 
     def calc_poison_reduce(self, poison):
@@ -66,4 +77,6 @@ class Ability:
     def print(self):
         print("increased armor ability", self.armor_ability)
         print("speed ability", self.speed)
-        print("strength", self.strength)
+        print("strength ability", self.strength)
+        print("poison resistance ability", self.poison_resistance)
+        print("toxicity ability", self.toxicity)

@@ -100,25 +100,11 @@ class Dot(Individual):
         # statistics
         self.statistic.print()
 
-    def attack_opponent(self, element, game_objects):
+    def dmg_dealt(self):
         """
-        attack an individual if own position + own velocity is in opponent radius
+        dmg multiplier is influenced by strength ability
         """
-        attack_vec = self.set_magnitude(self.velocity, self.radius)
-        attack_pos = self._position + attack_vec
-        distance = self.dist(element[0]._position, attack_pos)
-        if distance <= element[0].radius:
-            # calc dmg with strength ability
-            dmg = self.abilities.calc_dmg_with_strength(1, self.default_dmg)
-            # deal dmg to element[0]
-            dmg_dealt = element[0].abilities.calc_dmg_on_armor(dmg)
-            element[0].health -= dmg_dealt
-            # repell self a little in opposite direction
-            steer = self.velocity * -1
-            steer = self.limit(steer, self.max_force * pow(10, 10))
-            self.apply_force(steer)
-            self.add_attack_count(element[0])
-            self.statistic.enemies_attacked += 1
+        return self.abilities.calc_dmg_with_strength(1, self.default_dmg)
 
     def decrase_health(self):
         """

@@ -213,12 +213,35 @@ class Individual(metaclass=abc.ABCMeta):
             game_objects["food"].remove(element[0])
             self.statistic.food_eaten += 1
 
-    @abc.abstractmethod
     def attack_opponent(self, element, game_objects):
         """
-        abstract method to attack an individual
-        this function differs from dot to predator
-        since predators don't have abilities
+        attack an individual if own position + own velocity is in opponent radius
+        """
+        attack_vec = self.set_magnitude(self.velocity, self.radius)
+        attack_pos = self._position + attack_vec
+        distance = self.dist(element[0]._position, attack_pos)
+        if distance <= element[0].radius:
+            # calc dmg with strength ability
+            dmg = self.dmg_dealt()
+            # deal dmg to element[0]
+            dmg_dealt = element[0].abilities.calc_dmg_on_armor(dmg)
+            element[0].health -= dmg_dealt
+
+            # is the opponent toxic? deal its toxicity dmg
+            receive_dmg = element[0].abilities.calc_dmg_dealt_by_toxicity()
+            self.health -= receive_dmg
+
+            # repell self a little in opposite direction
+            steer = self.velocity * -1
+            steer = self.limit(steer, self.max_force * pow(10, 10))
+            self.apply_force(steer)
+            self.add_attack_count(element[0])
+            self.statistic.enemies_attacked += 1
+
+    @abc.abstractmethod
+    def dmg_dealt(self):
+        """
+        abstract method to let individuals have ability influenced dmg
         """
         pass
 

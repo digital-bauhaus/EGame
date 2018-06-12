@@ -76,7 +76,7 @@
                     "speed": 1,
                     "poison_resistance": 1,
                     "reduced_breeding_time": 1,
-                    "poisoness": 1,
+                    "toxicity": 1,
                     "strength": 1
                 }
             },
@@ -115,7 +115,8 @@
             "ability_base": {
                 "armor_dmg_reduce": 0.8,
                 "max_speed_increase": 1,
-                "max_poison_reduce": 0.8
+                "max_poison_reduce": 0.8,
+                "toxicity_max_dmg": 0.1
             },
             "items": {
                 "food": {
@@ -140,7 +141,7 @@
                     "size": 10,
                     "color": "brown",
                     "image": "",
-                    "nutrition": 0.2
+                    "nutrition": 0.1
                 },
                 "heal_potion": {
                     "size": 8,

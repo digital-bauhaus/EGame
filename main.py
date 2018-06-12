@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QIcon
 from gui.main_window import App
 from config import Config
 import sys
@@ -36,6 +37,7 @@ if __name__ == "__main__":
     spec2.loader.exec_module(module2)
 
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon('./img/game_icon3.png'))
     GUI = App(config, [module1, module2], fastmode, fastmode_runs)
     GUI.show()
     sys.exit(app.exec_())

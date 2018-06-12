@@ -27,7 +27,7 @@ class Individual(metaclass=abc.ABCMeta):
         self.health = self.max_health
         self.poison = self.individual_config['start_poison']
         self.color = color
-        self.strength = self.individual_config['default_strength']
+        self.default_dmg = self.individual_config['default_dmg']
 
         # if a position was not given
         if position is None:
@@ -213,7 +213,6 @@ class Individual(metaclass=abc.ABCMeta):
             game_objects["food"].remove(element[0])
             self.statistic.food_eaten += 1
 
-
     def attack_opponent(self, element, game_objects):
         """
         attack an individual if own position + own velocity is in opponent radius
@@ -222,15 +221,29 @@ class Individual(metaclass=abc.ABCMeta):
         attack_pos = self._position + attack_vec
         distance = self.dist(element[0]._position, attack_pos)
         if distance <= element[0].radius:
+            # calc dmg with strength ability
+            dmg = self.dmg_dealt()
             # deal dmg to element[0]
-            dmg_dealt = element[0].abilities.calc_dmg_on_armor(self.strength)
+            dmg_dealt = element[0].abilities.calc_dmg_on_armor(dmg)
             element[0].health -= dmg_dealt
+
+            # is the opponent toxic? deal its toxicity dmg
+            receive_dmg = element[0].abilities.calc_dmg_dealt_by_toxicity()
+            self.health -= receive_dmg
+
             # repell self a little in opposite direction
             steer = self.velocity * -1
-            steer = self.limit(steer, self.max_force*pow(10,10))
+            steer = self.limit(steer, self.max_force * pow(10, 10))
             self.apply_force(steer)
             self.add_attack_count(element[0])
             self.statistic.enemies_attacked += 1
+
+    @abc.abstractmethod
+    def dmg_dealt(self):
+        """
+        abstract method to let individuals have ability influenced dmg
+        """
+        pass
 
 
     def calc_force(self, element, desire, inverse = False):
@@ -253,12 +266,15 @@ class Individual(metaclass=abc.ABCMeta):
         return steer
 
 
+    @abc.abstractmethod
     def decrase_health(self):
         """
+        abstract method for frame health decrease
+        since predators don't have abilities
         decrease own health if called
         the amount is increased by own poisoning
         """
-        self.health -= 0.0005 * self.poison
+        pass
 
 
     def increase_health(self, nutrition):

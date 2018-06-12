@@ -65,29 +65,27 @@ class Dot(Individual):
         table_widget.setItem(12, index, QTableWidgetItem(str(self.desires.dodge_predators)))
 
         # #abilities
-        # # table_widget.setItem(13, 1, QTableWidgetItem(str(self.abilities)))
-        # # table_widget.setItem(14, 1, QTableWidgetItem("Increased Speed"))
-        # # table_widget.setItem(
-        # #     15, 1, QTableWidgetItem("Increased Poison Resistance"))
-        # # table_widget.setItem(
-        # #     16, 1, QTableWidgetItem("Increased Breeding"))
-        # # table_widget.setItem(
-        # #     17, 1, QTableWidgetItem("Increased Poisoness"))
+        table_widget.setItem(13, index, QTableWidgetItem(str(self.abilities.armor_ability)))
+        table_widget.setItem(14, index, QTableWidgetItem(str(self.abilities.speed)))
+        table_widget.setItem(15, index, QTableWidgetItem(str(self.abilities.poison_resistance)))
+        table_widget.setItem(16, index, QTableWidgetItem(str(self.abilities.breeder)))
+        table_widget.setItem(17, index, QTableWidgetItem(str(self.abilities.strength)))
+        table_widget.setItem(18, index, QTableWidgetItem(str(self.abilities.toxicity)))
 
         # #statistics
-        table_widget.setItem(18, index, QTableWidgetItem(str(self.statistic.food_eaten)))
-        table_widget.setItem(19, index, QTableWidgetItem(str(self.statistic.poison_eaten)))
-        table_widget.setItem(20, index, QTableWidgetItem(str(self.statistic.consumed_potions)))
-        table_widget.setItem(21, index, QTableWidgetItem(str(self.statistic.consumed_corpses)))
-        table_widget.setItem(22, index, QTableWidgetItem(str(self.statistic.enemies_attacked)))
-        table_widget.setItem(23, index, QTableWidgetItem(str(self.statistic.attacked_by_opponents)))
-        table_widget.setItem(24, index, QTableWidgetItem(str(self.statistic.attacked_by_predators)))
-        table_widget.setItem(25, index, QTableWidgetItem(str(self.statistic.food_seen)))
-        table_widget.setItem(26, index, QTableWidgetItem(str(self.statistic.poison_seen)))
-        table_widget.setItem(27, index, QTableWidgetItem(str(self.statistic.potions_seen)))
-        table_widget.setItem(28, index, QTableWidgetItem(str(self.statistic.opponents_seen)))
-        table_widget.setItem(29, index, QTableWidgetItem(str(self.statistic.predators_seen)))
-        table_widget.setItem(30, index, QTableWidgetItem(str(self.statistic.corpses_seen)))
+        table_widget.setItem(19, index, QTableWidgetItem(str(self.statistic.food_eaten)))
+        table_widget.setItem(20, index, QTableWidgetItem(str(self.statistic.poison_eaten)))
+        table_widget.setItem(21, index, QTableWidgetItem(str(self.statistic.consumed_potions)))
+        table_widget.setItem(22, index, QTableWidgetItem(str(self.statistic.consumed_corpses)))
+        table_widget.setItem(23, index, QTableWidgetItem(str(self.statistic.enemies_attacked)))
+        table_widget.setItem(24, index, QTableWidgetItem(str(self.statistic.attacked_by_opponents)))
+        table_widget.setItem(25, index, QTableWidgetItem(str(self.statistic.attacked_by_predators)))
+        table_widget.setItem(26, index, QTableWidgetItem(str(self.statistic.food_seen)))
+        table_widget.setItem(27, index, QTableWidgetItem(str(self.statistic.poison_seen)))
+        table_widget.setItem(28, index, QTableWidgetItem(str(self.statistic.potions_seen)))
+        table_widget.setItem(29, index, QTableWidgetItem(str(self.statistic.opponents_seen)))
+        table_widget.setItem(30, index, QTableWidgetItem(str(self.statistic.predators_seen)))
+        table_widget.setItem(31, index, QTableWidgetItem(str(self.statistic.corpses_seen)))
 
     def print_all_details(self):
         print("is dead", self.dead)
@@ -99,3 +97,17 @@ class Dot(Individual):
         self.abilities.print()
         # statistics
         self.statistic.print()
+
+    def dmg_dealt(self):
+        """
+        dmg multiplier is influenced by strength ability
+        """
+        return self.abilities.calc_dmg_with_strength(1, self.default_dmg)
+
+    def decrase_health(self):
+        """
+        decrease own health if called
+        the amount is increased by own poisoning
+        """
+        self.health -= self.individual_config['frame_health_reduce'] \
+            * self.abilities.calc_poison_reduce(self.poison)

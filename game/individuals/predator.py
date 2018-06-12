@@ -18,7 +18,7 @@ class Predator(Individual):
         self.desires = Desires(self.predator_config["default_desires"], True)
         self.radius = self.predator_config['size']
 
-        self.strength = self.predator_config['default_strength']
+        self.default_dmg = self.predator_config['default_dmg']
 
         # we want that the predators spawn outside of the game area        
         _left_border = 0
@@ -74,3 +74,16 @@ class Predator(Individual):
             # limit the steering
             # steer = self.set_magnitude(steer, self.max_force)
             self.apply_force(steer)
+
+    def dmg_dealt(self):
+        """
+        dmg is simply the default value
+        """
+        return self.default_dmg
+
+    def decrase_health(self):
+        """
+        decrease own health if called
+        the amount is increased by own poisoning
+        """
+        self.health -= self.individual_config['frame_health_reduce'] * self.poison

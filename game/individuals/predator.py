@@ -94,3 +94,10 @@ class Predator(Individual):
             self.apply_force(steer)
             self.add_attack_count(element[0])
             self.statistic.enemies_attacked += 1
+
+    def decrase_health(self):
+        """
+        decrease own health if called
+        the amount is increased by own poisoning
+        """
+        self.health -= self.individual_config['frame_health_reduce'] * self.poison

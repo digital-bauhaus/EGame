@@ -243,12 +243,15 @@ class Individual(metaclass=abc.ABCMeta):
         return steer
 
 
+    @abc.abstractmethod
     def decrase_health(self):
         """
+        abstract method for frame health decrease
+        since predators don't have abilities
         decrease own health if called
         the amount is increased by own poisoning
         """
-        self.health -= 0.0005 * self.poison
+        pass
 
 
     def increase_health(self, nutrition):

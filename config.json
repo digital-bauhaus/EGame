@@ -29,7 +29,7 @@
                 "num_predators": 15,
                 "spawn_prob_predators": 0.005,
                 "_breeding_frame": 1000,
-                "breeding_frame": 2000
+                "breeding_frame": 1500
             },
             "individuals": {
                 "start_size": 10,
@@ -40,6 +40,7 @@
                 "min_poison": 1,
                 "start_poison": 1,
                 "default_dmg": 0.1,
+                "frame_health_reduce": 0.0005,
                 "use_default_desires": false,
                 "default_desires": {
                     "absolute": 1,
@@ -84,6 +85,7 @@
                 "speed_factor": 0.5,
                 "color": [139, 69, 19],
                 "default_dmg": 0.1,
+                "frame_health_reduce": 0.0005,
                 "default_perception": {
                     "_comment": "sum of all has to be 1",
                     "absolute": 150,
@@ -112,7 +114,8 @@
             },
             "ability_base": {
                 "armor_dmg_reduce": 0.8,
-                "max_speed_increase": 1
+                "max_speed_increase": 1,
+                "max_poison_reduce": 0.8
             },
             "items": {
                 "food": {

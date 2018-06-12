@@ -7,9 +7,6 @@ from game.items.food import Food
 from game.items.poison import Poison
 from game.items.heal_potion import HealPotion
 from game.items.corpse import Corpse
-# TODO: this has to be a program parameter
-from genetic_algorithm.breeder import Breeder as Breeder_pop1
-from genetic_algorithm.breeder import Breeder as Breeder_pop2
 
 from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen
 from PyQt5.QtCore import QPoint, Qt

@@ -1,6 +1,5 @@
 from game.individuals.dot import Dot
 
-# TODO: remove this later
 from random import choice
 from copy import copy
 

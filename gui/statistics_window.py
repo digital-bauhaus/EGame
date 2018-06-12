@@ -6,6 +6,7 @@ from gui.statistics_widget import StatisticsWidget
 class StatisticsWindow(QMainWindow):
     def __init__(self, parent, game):
         super().__init__(parent)
+        self.parent_window = parent
         self.statistics_widget = StatisticsWidget(self, game)
         self.timer = QBasicTimer()
         self.timer.start(20, self)

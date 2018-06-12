@@ -28,9 +28,9 @@ class StatisticsWidget(QWidget):
                          self.height)
         
         self.table_widget = QTableWidget()
-        # TODO: set dynamic row and column
         self.table_widget.setRowCount(31)  # attributes
-        self.table_widget.setColumnCount(20)  # individuals
+        num_individuals = self.parent.parent_window.config.global_config['num_individuals'] * 2
+        self.table_widget.setColumnCount(num_individuals)  # individuals
 
         self.display_statistics()
 
@@ -65,7 +65,7 @@ class StatisticsWidget(QWidget):
         header = []
         for pop in populations:
             for i in range(len(self.game.game_objects[pop])):
-                header.append(pop + " #" + str(i+1))
+                header.append(self.game.colors[pop][1] + " #" + str(i+1))
 
         # self.table_widget.setSpan(1,0,7,0)
         # setItem(row, column, item)

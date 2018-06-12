@@ -28,15 +28,15 @@ class Ability:
             # 0 means that no dmg is dealt
             # 1 means toxicity_max_dmg is dealt
             self.toxicity = config['toxicity']
-            # self.reduced_breeding_time = config['reduced_breeding_time']
+            self.breeder = config['reduced_breeding_time'] # TODO
         else:
             init_values = np.random.dirichlet(np.ones(6), size=1)[0]
             self.armor_ability = init_values[0]
             self.speed = init_values[1]
             self.strength = init_values[2]
             self.poison_resistance = init_values[3]
-            self.toxicity = init_values[4]  # TODO
-            self.reduced_breeding_time = init_values[5] #TODO
+            self.toxicity = init_values[4]
+            self.breeder = init_values[5]  # TODO
 
 
     def calc_dmg_dealt_by_toxicity(self):

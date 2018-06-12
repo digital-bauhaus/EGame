@@ -28,7 +28,7 @@ class StatisticsWidget(QWidget):
                          self.height)
         
         self.table_widget = QTableWidget()
-        self.table_widget.setRowCount(31)  # attributes
+        self.table_widget.setRowCount(32)  # attributes
         num_individuals = self.parent.parent_window.config.global_config['num_individuals'] * 2
         self.table_widget.setColumnCount(num_individuals)  # individuals
 
@@ -89,7 +89,8 @@ class StatisticsWidget(QWidget):
             "Increased Speed",
             "Increased Poison Resistance",
             "Increased Breeding",
-            "Increased Poisoness",
+            "Strength",
+            "Toxicity",
             "Food Eaten",
             "Poison Eaten",
             "Consumed Heal Potions",

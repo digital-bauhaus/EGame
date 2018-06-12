@@ -142,7 +142,7 @@
                     "size": 8,
                     "color": "violet",
                     "_image": "./img/hp_potion_shadow.png",
-                    "image": "./img/hp_potion_shaddow_scaled20.png"
+                    "image": "./img/hp_potion_shadow_scaled20.png"
                 }
             },
             "environment": {

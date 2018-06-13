@@ -10,5 +10,4 @@ class Config:
         self.individuals = parameter['individuals']
         self.predators = parameter['predators']
         self.items = parameter['items']
-        self.environment = parameter['environment']
         self.ability_base = parameter['ability_base']

@@ -75,7 +75,6 @@
                     "increased_armor": 1,
                     "speed": 1,
                     "poison_resistance": 1,
-                    "reduced_breeding_time": 1,
                     "toxicity": 1,
                     "strength": 1
                 }
@@ -148,40 +147,6 @@
                     "color": "violet",
                     "_image": "./img/hp_potion_shadow.png",
                     "image": "./img/hp_potion_shadow_scaled20.png"
-                }
-            },
-            "environment": {
-                "slow": {
-                    "max_size": 200,
-                    "min_size": 30,
-                    "form": "rectangle",
-                    "abilities": {
-                        "slow": 1
-                    }
-                },
-                "health": {
-                    "max_size": 200,
-                    "min_size": 30,
-                    "form": "rectangle",
-                    "abilities": {
-                        "health": 1
-                    }
-                },
-                "poison":{
-                    "max_size": 200,
-                    "min_size": 30,
-                    "form": "rectangle",
-                    "abilities": {
-                        "poison": 1
-                    }
-                },
-                "stun": {
-                    "max_size": 200,
-                    "min_size": 30,
-                    "form": "rectangle",
-                    "abilities": {
-                        "stun_time": 5
-                    }
                 }
             }
         }

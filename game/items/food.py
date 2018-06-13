@@ -11,7 +11,7 @@ class Food(GameItem):
         self.color = self.food_config['color']
         self.image = self.food_config['image']
         self.nutrition = self.food_config['nutrition']
-    
+
     def draw(self, painter):
         if self.image is "":
             self.draw_polygon(painter)

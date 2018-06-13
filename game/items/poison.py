@@ -9,9 +9,16 @@ class Poison(GameItem):
         self.poison_config = self.items_config["poison"]
         self.size = self.poison_config['size']
         self.color = self.poison_config['color']
+        self.image = self.poison_config['image']
         self.nutrition = self.poison_config['poisonness']
 
     def draw(self, painter):
+        if self.image is "":
+            self.draw_polygon(painter)
+        else:
+            self.draw_image(painter)
+
+    def draw_polygon(self, painter):
         color = QColor(self.color)
         painter.setBrush(color)
         painter.setPen(QColor(0,0,0))

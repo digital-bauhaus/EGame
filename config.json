@@ -127,7 +127,7 @@
                 "poison": {
                     "size": 5,
                     "color": "red",
-                    "image": "",
+                    "image": "./img/mushroom_kenny.png",
                     "poisonness": 1
                 },
                 "rainbow_drops": {

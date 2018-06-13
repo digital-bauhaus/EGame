@@ -17,7 +17,7 @@
                 },
                 "game_speed": 20,
                 "border_width": 20,
-                "num_individuals": 10,
+                "num_individuals": 100,
                 "num_food": 25,
                 "spawn_prob_food": 0.1,
                 "num_poison": 30,

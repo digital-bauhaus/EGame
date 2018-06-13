@@ -8,6 +8,7 @@ import numpy as np
 class Dot(Individual):
     def __init__(self,
                  parent_canvas,
+                 dna=None,
                  position=None,
                  radius=None,
                  color=None,
@@ -16,22 +17,25 @@ class Dot(Individual):
                  perception=None):
         Individual.__init__(self, parent_canvas, color, radius, position)
         # an individual has perceptions, desires and abilities
-        if perception is None:
-            self.perception = Perception(self.individual_config['default_perception'],
-                                        self.individual_config['use_default_perception'])
+        if dna is None:
+            if perception is None:
+                self.perception = Perception(self.individual_config['default_perception'],
+                                             default=self.individual_config['use_default_perception'])
+            else:
+                self.perception = perception
+            if desires is None:
+                self.desires = Desires(self.individual_config['default_desires'],
+                                       default=self.individual_config['use_default_desires'])
+            else:
+                self.desires = desires
+            if abilities is None:
+                self.abilities = Ability(self.ability_base,
+                                         self.individual_config['default_abilities'],
+                                         default=self.individual_config['use_default_abilities'])
+            else:
+                self.abilities = abilities
         else:
-            self.perception = perception
-        if desires is None:
-            self.desires = Desires(self.individual_config['default_desires'],
-                                self.individual_config['use_default_desires'])
-        else:
-            self.desires = desires
-        if abilities is None:
-            self.abilities = Ability(self.ability_base,
-                                    self.individual_config['default_abilities'],
-                                    self.individual_config['use_default_abilities'])
-        else:
-            self.abilities = abilities
+            self.dna_to_traits(dna)
         self.dead = False
 
     def add_attack_count(self, individual):
@@ -111,3 +115,27 @@ class Dot(Individual):
         """
         self.health -= self.individual_config['frame_health_reduce'] \
             * self.abilities.calc_poison_reduce(self.poison)
+
+    def get_dna(self):
+        """
+        get the dna of this individual
+        """
+        # perception
+        # desires
+        # abilities
+        dna = [
+            self.perception.get_dna(),
+            self.desires.get_dna(),
+            self.abilities.get_dna()
+        ]
+    
+    def dna_to_traits(self, dna):
+        """
+        sets the dna of the individual
+        """
+        self.perception = Perception(
+            self.individual_config['default_perception'], dna[0])
+        self.desires = Desires(
+            self.individual_config['default_desires'], dna[1])
+        self.abilities = Ability(self.ability_base,
+            self.individual_config['default_abilities'], dna[2])

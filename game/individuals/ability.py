@@ -1,43 +1,50 @@
 import numpy as np
+from game.individuals.trait import Trait
 
-class Ability:
-    def __init__(self, ability_base, config, default=False):
+class Ability(Trait):
+    def __init__(self, ability_base, config, dna=None, default=False):
         self.max_dmg_reduce_by_armor = ability_base['armor_dmg_reduce']
         self.max_speed_increase = ability_base['max_speed_increase']
         self.max_poison_reduce = ability_base['max_poison_reduce']
         self.toxicity_max_dmg = ability_base['toxicity_max_dmg']
-        if default:
-            # increased armor controls how much dmg is taken if attacked
-            # 0 means full dmg is taken
-            # 1 means full armor_dmg_reduce is applied
-            self.armor_ability = config['increased_armor']
-            # speed controls additional speed
-            # 0 means standard speed is applied
-            # 1 means full max_speed_increase is applied
-            # (e.g double speed with max_speed_increase = 1)
-            self.speed = config['speed']
-            # strength controls additional dmg dealt
-            # 0 means base dmg is dealt
-            # 1 means double dmg is dealt
-            self.strength = config['strength']
-            # poison resistance controls how much the current poison value affects the regular health decrease
-            # 0 means full poison is applied each frame
-            # 1 means max poison reduce is applied each frame
-            self.poison_resistance = config['poison_resistance']
-            # toxicity controls how much opponents receive dmg when they attack
-            # 0 means that no dmg is dealt
-            # 1 means toxicity_max_dmg is dealt
-            self.toxicity = config['toxicity']
-            self.breeder = config['reduced_breeding_time'] # TODO
+        if dna is None:
+            if default:
+                # increased armor controls how much dmg is taken if attacked
+                # 0 means full dmg is taken
+                # 1 means full armor_dmg_reduce is applied
+                self.armor_ability = config['increased_armor']
+                # speed controls additional speed
+                # 0 means standard speed is applied
+                # 1 means full max_speed_increase is applied
+                # (e.g double speed with max_speed_increase = 1)
+                self.speed = config['speed']
+                # strength controls additional dmg dealt
+                # 0 means base dmg is dealt
+                # 1 means double dmg is dealt
+                self.strength = config['strength']
+                # poison resistance controls how much the current poison value affects the regular health decrease
+                # 0 means full poison is applied each frame
+                # 1 means max poison reduce is applied each frame
+                self.poison_resistance = config['poison_resistance']
+                # toxicity controls how much opponents receive dmg when they attack
+                # 0 means that no dmg is dealt
+                # 1 means toxicity_max_dmg is dealt
+                self.toxicity = config['toxicity']
+            else:
+                init_values = np.random.dirichlet(np.ones(5), size=1)[0]
+                self.armor_ability = init_values[0]
+                self.speed = init_values[1]
+                self.strength = init_values[2]
+                self.poison_resistance = init_values[3]
+                self.toxicity = init_values[4]
         else:
-            init_values = np.random.dirichlet(np.ones(6), size=1)[0]
-            self.armor_ability = init_values[0]
-            self.speed = init_values[1]
-            self.strength = init_values[2]
-            self.poison_resistance = init_values[3]
-            self.toxicity = init_values[4]
-            self.breeder = init_values[5]  # TODO
-
+            # check if dna is valid
+            self.check_dna(dna)
+            self.armor_ability = dna[0]
+            self.speed = dna[1]
+            self.strength = dna[2]
+            self.poison_resistance = dna[3]
+            self.toxicity = dna[4]
 
     def calc_dmg_dealt_by_toxicity(self):
         """
@@ -80,3 +87,9 @@ class Ability:
         print("strength ability", self.strength)
         print("poison resistance ability", self.poison_resistance)
         print("toxicity ability", self.toxicity)
+
+    def get_dna(self):
+        """
+        wrap abilities into dna array
+        """
+        return [self.armor_ability, self.speed, self.strength, self.poison_resistance, self.toxicity]

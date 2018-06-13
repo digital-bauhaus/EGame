@@ -40,9 +40,7 @@ class Breeder:
             new_individual = Dot(self.parent,
                                  color=dead_individual.color,
                                  position=alive_individual._position,
-                                 abilities=dead_individual.abilities,
-                                 desires=dead_individual.desires,
-                                 perception=dead_individual.perception)
+                                 dna=dead_individual.get_dna())
             population_cpy.append(new_individual)
         for dead_individual in dead:
             population_cpy.remove(dead_individual)

@@ -14,8 +14,8 @@ class Predator(Individual):
         # a predator is slower than individuals
         self.max_speed = self.max_speed * self.predator_config["speed_factor"]
         # it has perceptions and desires defined in config file
-        self.perception = Perception(self.predator_config["default_perception"], True)
-        self.desires = Desires(self.predator_config["default_desires"], True)
+        self.perception = Perception(self.predator_config["default_perception"], default=True)
+        self.desires = Desires(self.predator_config["default_desires"], default=True)
         self.radius = self.predator_config['size']
 
         self.default_dmg = self.predator_config['default_dmg']

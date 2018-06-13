@@ -15,6 +15,26 @@ class Breeder:
         """
         return self.breed_example(population)
 
+    def initialize_population(self, num_individuals, color):
+        """
+        this function gets calles by EGame before the first frame
+        it gets the number of individuals which have to be generated
+        also, it gets the color of the population
+        """
+        return self.initialize_population_example(num_individuals, color)
+
+    
+    def initialize_population_example(self, num_individuals, color):
+        """
+        example initializer
+        creates individuals with random traits
+        """
+        population = []
+        for _ in range(num_individuals):
+            population.append(Dot(self.parent, color=color))
+        return population
+
+
     def breed_example(self, population):
         """
         example breeding function
@@ -40,9 +60,7 @@ class Breeder:
             new_individual = Dot(self.parent,
                                  color=dead_individual.color,
                                  position=alive_individual._position,
-                                 abilities=dead_individual.abilities,
-                                 desires=dead_individual.desires,
-                                 perception=dead_individual.perception)
+                                 dna=dead_individual.get_dna())
             population_cpy.append(new_individual)
         for dead_individual in dead:
             population_cpy.remove(dead_individual)

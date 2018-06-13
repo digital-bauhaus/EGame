@@ -34,6 +34,8 @@ class EGame:
         self.item_config = self.config.items
 
         self.breeding_timer = 0
+        self.breeder_pop1 = self.parent.parent_window.optimizers[0].Breeder(self.parent)
+        self.breeder_pop2 = self.parent.parent_window.optimizers[1].Breeder(self.parent)
 
         self.colors = {}
         # blueish
@@ -59,9 +61,14 @@ class EGame:
         self.game_objects['corpse'] = []
         self.game_objects['predators'] = []
 
-        for _ in range(self.num_individuals):
-            self.game_objects['pop1'].append(Dot(self.parent, color=self.colors['pop1'][0]))
-            self.game_objects['pop2'].append(Dot(self.parent, color=self.colors['pop2'][0]))
+        self.game_objects['pop1'] = self.breeder_pop1.initialize_population(
+            self.num_individuals, self.colors['pop1'][0])
+        self.game_objects['pop2'] = self.breeder_pop2.initialize_population(
+            self.num_individuals, self.colors['pop2'][0])
+
+        # for _ in range(self.num_individuals):
+        #     self.game_objects['pop1'].append(Dot(self.parent, color=self.colors['pop1'][0]))
+        #     self.game_objects['pop2'].append(Dot(self.parent, color=self.colors['pop2'][0]))
         for _ in range(self.num_food):
             self.game_objects['food'].append(Food(self.parent, self.border_width))
         for _ in range(self.num_poison):
@@ -84,18 +91,15 @@ class EGame:
         self.breeding_timer += 1
         if self.breeding_timer == self.global_parameter['breeding_frame']:
             print("BREEDING TIME")
-            self.breed(
-                'pop1', optimizer=self.parent.parent_window.optimizers[0])
-            self.breed(
-                'pop2', optimizer=self.parent.parent_window.optimizers[1])
+            self.breed('pop1', breeder=self.breeder_pop1)
+            self.breed('pop2', breeder=self.breeder_pop2)
             self.breeding_timer = 0
     
 
-    def breed(self, population, optimizer):
+    def breed(self, population, breeder):
         """
         breed populations with given optimizer
         """
-        breeder = optimizer.Breeder(self.parent)
         self.game_objects[population] = breeder.breed(self.game_objects[population])
 
 

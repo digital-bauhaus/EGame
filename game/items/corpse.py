@@ -9,9 +9,17 @@ class Corpse(GameItem):
         self.size = self.corpse_config['size']
         self.color = self.corpse_config['color']
         self.nutrition = self.corpse_config['nutrition']
+        self.image = self.corpse_config['image']
         self.poison = poison
 
     def draw(self, painter):
+        if self.image is "":
+            self.draw_polygon(painter)
+        else:
+            self.draw_image(painter)
+
+
+    def draw_polygon(self, painter):
         color = QColor(self.color)
         painter.setBrush(color)
 

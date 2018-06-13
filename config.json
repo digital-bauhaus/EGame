@@ -139,7 +139,7 @@
                 "corpse": {
                     "size": 10,
                     "color": "brown",
-                    "image": "",
+                    "image": "./img/meat.png",
                     "nutrition": 0.1
                 },
                 "heal_potion": {

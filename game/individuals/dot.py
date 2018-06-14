@@ -51,28 +51,28 @@ class Dot(Individual):
         # setItem(row, column, item)
 
         table_widget.setItem(0, index, QTableWidgetItem(str(self.dead)))
+        table_widget.setItem(1, index, QTableWidgetItem(str(self.statistic.time_survived)))
 
         #perception
-        table_widget.setItem(1, index, QTableWidgetItem(str(self.perception.food)))
-        table_widget.setItem(2, index, QTableWidgetItem(str(self.perception.poison)))
-        table_widget.setItem(3, index, QTableWidgetItem(str(self.perception.health_potion)))
-        table_widget.setItem(4, index, QTableWidgetItem(str(self.perception.corpse)))
-        table_widget.setItem(5, index, QTableWidgetItem(str(self.perception.opponent)))
-        table_widget.setItem(6, index, QTableWidgetItem(str(self.perception.predator)))
+        table_widget.setItem(2, index, QTableWidgetItem(str(self.perception.food)))
+        table_widget.setItem(3, index, QTableWidgetItem(str(self.perception.poison)))
+        table_widget.setItem(4, index, QTableWidgetItem(str(self.perception.health_potion)))
+        table_widget.setItem(5, index, QTableWidgetItem(str(self.perception.corpse)))
+        table_widget.setItem(6, index, QTableWidgetItem(str(self.perception.opponent)))
+        table_widget.setItem(7, index, QTableWidgetItem(str(self.perception.predator)))
 
         # #desires
-        table_widget.setItem(7, index, QTableWidgetItem(str(self.desires.seek_food)))
-        table_widget.setItem(8, index, QTableWidgetItem(str(self.desires.dodge_poison)))
-        table_widget.setItem(9, index, QTableWidgetItem(str(self.desires.seek_potion)))
-        table_widget.setItem(10, index, QTableWidgetItem(str(self.desires.seek_opponents)))
-        table_widget.setItem(11, index, QTableWidgetItem(str(self.desires.seek_corpse)))
-        table_widget.setItem(12, index, QTableWidgetItem(str(self.desires.dodge_predators)))
+        table_widget.setItem(8, index, QTableWidgetItem(str(self.desires.seek_food)))
+        table_widget.setItem(9, index, QTableWidgetItem(str(self.desires.dodge_poison)))
+        table_widget.setItem(10, index, QTableWidgetItem(str(self.desires.seek_potion)))
+        table_widget.setItem(11, index, QTableWidgetItem(str(self.desires.seek_opponents)))
+        table_widget.setItem(12, index, QTableWidgetItem(str(self.desires.seek_corpse)))
+        table_widget.setItem(13, index, QTableWidgetItem(str(self.desires.dodge_predators)))
 
         # #abilities
-        table_widget.setItem(13, index, QTableWidgetItem(str(self.abilities.armor_ability)))
-        table_widget.setItem(14, index, QTableWidgetItem(str(self.abilities.speed)))
-        table_widget.setItem(15, index, QTableWidgetItem(str(self.abilities.poison_resistance)))
-        table_widget.setItem(16, index, QTableWidgetItem(str(self.abilities.breeder)))
+        table_widget.setItem(14, index, QTableWidgetItem(str(self.abilities.armor_ability)))
+        table_widget.setItem(15, index, QTableWidgetItem(str(self.abilities.speed)))
+        table_widget.setItem(16, index, QTableWidgetItem(str(self.abilities.poison_resistance)))
         table_widget.setItem(17, index, QTableWidgetItem(str(self.abilities.strength)))
         table_widget.setItem(18, index, QTableWidgetItem(str(self.abilities.toxicity)))
 

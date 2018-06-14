@@ -73,6 +73,7 @@ class StatisticsWidget(QWidget):
         self.table_widget.setHorizontalHeaderLabels(header)
         v_header_labels = [
             "Dead",
+            "Frames Survived",
             "Food Perception",
             "Poison Perception",
             "Heal Potion Perception",
@@ -88,7 +89,6 @@ class StatisticsWidget(QWidget):
             "Increased Armor",
             "Increased Speed",
             "Increased Poison Resistance",
-            "Increased Breeding",
             "Strength",
             "Toxicity",
             "Food Eaten",

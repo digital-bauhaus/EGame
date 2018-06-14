@@ -128,6 +128,7 @@ class Dot(Individual):
             self.desires.get_dna(),
             self.abilities.get_dna()
         ]
+        return dna
     
     def dna_to_traits(self, dna):
         """

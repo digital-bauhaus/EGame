@@ -7,6 +7,7 @@ from game.items.food import Food
 from game.items.poison import Poison
 from game.items.heal_potion import HealPotion
 from game.items.corpse import Corpse
+from game.individuals.invalid_population_exception import InvalidPopulationException
 
 from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen
 from PyQt5.QtCore import QPoint, Qt
@@ -100,7 +101,11 @@ class EGame:
         """
         breed populations with given optimizer
         """
-        self.game_objects[population] = breeder.breed(self.game_objects[population])
+        breeded_population = breeder.breed(self.game_objects[population])
+        # check if the population exceeds its individual limit
+        if len(breeded_population) > self.num_individuals:
+            raise InvalidPopulationException("Population exceeds its maximum individual count!")
+        self.game_objects[population] = breeded_population
 
 
     

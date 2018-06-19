@@ -110,28 +110,46 @@ class Breeder:
         """
         we want to increase the trait to seek food and increase armor
         """
+
+        dna = individual.get_dna()
         increase = uniform(0, 0.1)
-        individual.perception.food += increase
-        individual.perception.poison -= increase/5
-        individual.perception.health_potion -= increase/5
-        individual.perception.opponent -= increase/5
-        individual.perception.corpse -= increase/5
-        individual.perception.predator -= increase/5
 
-        individual.desires.seek_food += increase
-        individual.desires.dodge_poison -= increase/5
-        individual.desires.seek_potion -= increase/5
-        individual.desires.seek_opponents -= increase/5
-        individual.desires.seek_corpse -= increase/5
-        individual.desires.dodge_predators -= increase/5
+        perc = dna[0]
+        des = dna[1]
+        abil = dna[2]
 
-        individual.abilities.armor_ability += increase
-        individual.abilities.speed -= increase/4
-        individual.abilities.strength -= increase/4
-        individual.abilities.poison_resistance -= increase/4
-        individual.abilities.toxicity -= increase/4
+        perc = self.mutate_dna(
+            dna=perc, increase_value=increase, increase=0)
+        des = self.mutate_dna(
+            dna=des, increase_value=increase, increase=0)
+        abil = self.mutate_dna(
+            dna=abil, increase_value=increase, increase=0)
 
+        dna = [perc, des, abil]
+        individual.dna_to_traits(dna)
         return individual
+
+    def mutate_dna(self, dna, increase_value, increase):
+        # select some other dna to be decreased
+        choices = [i for i in range(len(dna))]
+        choices.remove(increase)
+        decreased = False
+        while not decreased:
+            decrease = choice(choices)
+            if dna[decrease] - increase_value >= 0.0:
+                dna[decrease] -= increase_value
+                decreased = True
+            else:
+                choices.remove(decrease)
+            if len(choices) == 0:
+                break
+        # if we were able to reduce the value for the other dna -> increase the desired dna
+        if decreased:
+            # increase the value
+            dna[increase] += increase_value if dna[increase] <= 1.0 else 1.0
+        # otherwise we cannot do anything
+        return dna
+
 
     def crossover_example(self, solution_a, solution_b):
         """

@@ -3,6 +3,8 @@ from game.individuals.perception import Perception
 from game.individuals.desires import Desires
 from game.individuals.ability import Ability
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import QPointF
 import numpy as np
 
 class Dot(Individual):
@@ -15,8 +17,8 @@ class Dot(Individual):
                  abilities=None,
                  desires=None,
                  perception=None):
-        Individual.__init__(self, parent_canvas, color, radius, position)
         # an individual has perceptions, desires and abilities
+        Individual.__init__(self, parent_canvas, color, radius, position)
         if dna is None:
             if perception is None:
                 self.perception = Perception(self.individual_config['default_perception'],
@@ -37,6 +39,13 @@ class Dot(Individual):
         else:
             self.dna_to_traits(dna)
         self.dead = False
+        if self.color[1] == "blue":
+            self.image = [QImage(self.individual_config['image1_pop1']),
+                          QImage(self.individual_config['image2_pop1'])]
+        elif self.color[1] == "yellow":
+            self.image = [QImage(self.individual_config['image1_pop2']),
+                          QImage(self.individual_config['image2_pop2'])]
+        self.set_image()
 
     def add_attack_count(self, individual):
         """

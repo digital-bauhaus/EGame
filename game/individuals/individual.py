@@ -2,8 +2,8 @@ import numpy as np
 import math
 import abc
 from random import randint, uniform
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import QPoint, QPointF
+from PyQt5.QtGui import QColor, QTransform, QPixmap, QImage
+from PyQt5.QtCore import QPoint, QPointF, Qt
 from game.individuals.perception import Perception
 from game.individuals.desires import Desires
 from game.individuals.ability import Ability
@@ -53,6 +53,13 @@ class Individual(metaclass=abc.ABCMeta):
         # should the default config be used?
 
         self.last_tick_seen = {}
+
+    def set_image(self):
+        """
+        initial image set
+        """
+        self.display_image = self.image[0]
+
 
     def update(self):
         """update the object by applying acceleration to velocity"""
@@ -421,7 +428,7 @@ class Individual(metaclass=abc.ABCMeta):
         """
         if self.parent.parent_window.debug[setting]:
             color = QColor(color)
-            target = position + QPoint(vector[0]*5, vector[1]*5)
+            target = position + QPoint(vector[0]*10, vector[1]*10)
             painter.setBrush(color)
             painter.setPen(QColor("black"))
             painter.drawLine(position, target)
@@ -495,16 +502,58 @@ class Individual(metaclass=abc.ABCMeta):
         """
         draw the individual
         """
-        self.draw_circle(painter)
+        # self.draw_circle(painter)
+        self.draw_image(painter)
         self.draw_debug(painter)
 
+
+    def draw_image(self, painter):
+        """
+        draw the individual
+        """
+        # rotate the image so that it points to the direction of the velocity
+        vec1 = np.array([0, -1])
+        vec2 = self.velocity
+        angle = math.atan2(vec2[1], vec2[0]) - math.atan2(vec1[1], vec1[0])
+        angle = math.degrees(angle)
+        half_x = self.display_image.width()/2
+        half_y = self.display_image.height()/2
+        pos_x = self._position[0]
+        pos_y = self._position[1]
+
+        painter.save()
+        painter.translate(pos_x, pos_y)
+        painter.rotate(angle)
+        painter.translate(-half_x, -half_y)
+        painter.drawImage(0, 0, self.display_image)
+        painter.restore()
+
+    def calc_angle(self, v1, v2, acute):
+        """
+        get the angle between two vectors in degree
+        """
+        angle = np.arccos(
+            np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+        if (acute == True):
+            return 180*angle
+        else:
+            return 180 * (2 * np.pi - angle)/np.pi
+
+    def swap_display_image(self):
+        """
+        swaps the image to be displayed to create an animation
+        """
+        if self.display_image == self.image[0]:
+            self.display_image = self.image[1]
+        else:
+            self.display_image = self.image[0]
 
     def draw_circle(self, painter):
         """
         draws a circle at own position with own color
         """
         # draw the circle for the individual
-        color = QColor(self.color[0], self.color[1], self.color[2])
+        color = QColor(self.color[0][0], self.color[0][1], self.color[0][2])
         position = QPoint(self._position[0], self._position[1])
         painter.setBrush(color)
         painter.setPen(QColor(0, 0, 0, 0))

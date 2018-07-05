@@ -29,7 +29,8 @@
                 "num_predators": 15,
                 "spawn_prob_predators": 0.005,
                 "_breeding_frame": 1000,
-                "breeding_frame": 1000
+                "breeding_frame": 300,
+                "image_swap_frame": 20
             },
             "individuals": {
                 "start_size": 10,
@@ -41,6 +42,10 @@
                 "start_poison": 1,
                 "default_dmg": 0.1,
                 "frame_health_reduce": 0.0005,
+                "image1_pop1": "img/blue1.png",
+                "image2_pop1": "img/blue2.png",
+                "image1_pop2": "img/yellow1.png",
+                "image2_pop2": "img/yellow2.png",
                 "use_default_desires": false,
                 "default_desires": {
                     "absolute": 1,
@@ -83,6 +88,8 @@
                 "size": 20,
                 "speed_factor": 0.5,
                 "color": [139, 69, 19],
+                "image1": "img/predator1.png",
+                "image2": "img/predator2.png",
                 "default_dmg": 0.1,
                 "frame_health_reduce": 0.0005,
                 "default_perception": {
@@ -121,13 +128,15 @@
                 "food": {
                     "size": 5,
                     "color": "green",
-                    "image": "./img/food4_scaled20.png",
+                    "_image": "./img/food4_scaled20.png",
+                    "image": "./img/food.png",
                     "nutrition": 0.1
                 },
                 "poison": {
                     "size": 5,
                     "color": "red",
-                    "image": "./img/mushroom_kenny.png",
+                    "_image": "./img/mushroom_kenny.png",
+                    "image": "./img/poison.png",
                     "poisonness": 1
                 },
                 "rainbow_drops": {
@@ -139,14 +148,15 @@
                 "corpse": {
                     "size": 10,
                     "color": "brown",
-                    "image": "./img/meat.png",
+                    "_image": "./img/meat.png",
+                    "image": "./img/corpse_blue2.png",
                     "nutrition": 0.1
                 },
                 "heal_potion": {
                     "size": 8,
                     "color": "violet",
                     "_image": "./img/hp_potion_shadow.png",
-                    "image": "./img/hp_potion_shadow_scaled20.png"
+                    "image": "./img/heal_potion.png"
                 }
             }
         }

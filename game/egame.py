@@ -31,6 +31,7 @@ class EGame:
         self.spawn_prob_poison = self.global_parameter['spawn_prob_poison']
         self.spawn_prob_rainbow_drops = self.global_parameter['spawn_prob_rainbow_drops']
         self.spawn_prob_predator = self.global_parameter['spawn_prob_predators']
+        self.image_swap_frame = self.global_parameter['image_swap_frame']
     
         self.item_config = self.config.items
 
@@ -46,7 +47,7 @@ class EGame:
 
         self.game_objects = {}
         self.running = False
-   
+        self.frame_counter = 0
 
     def start(self):
         """
@@ -63,9 +64,9 @@ class EGame:
         self.game_objects['predators'] = []
 
         self.game_objects['pop1'] = self.breeder_pop1.initialize_population(
-            self.num_individuals, self.colors['pop1'][0])
+            self.num_individuals, self.colors['pop1'])
         self.game_objects['pop2'] = self.breeder_pop2.initialize_population(
-            self.num_individuals, self.colors['pop2'][0])
+            self.num_individuals, self.colors['pop2'])
 
         # for _ in range(self.num_individuals):
         #     self.game_objects['pop1'].append(Dot(self.parent, color=self.colors['pop1'][0]))
@@ -95,6 +96,17 @@ class EGame:
             self.breed('pop1', breeder=self.breeder_pop1)
             self.breed('pop2', breeder=self.breeder_pop2)
             self.breeding_timer = 0
+        self.frame_counter += 1
+        # swap the image
+        if self.frame_counter == self.image_swap_frame:
+            self.frame_counter = 0
+            for blue in self.game_objects['pop1']:
+                blue.swap_display_image()
+            for yellow in self.game_objects['pop2']:
+                yellow.swap_display_image()
+            for predator in self.game_objects['predators']:
+                predator.swap_display_image()
+            
     
 
     def breed(self, population, breeder):
@@ -165,7 +177,7 @@ class EGame:
             and len(self.game_objects['predators']) < self.num_predators
         ):
             self.game_objects['predators'].append(
-                Predator(self.parent, color=self.predator_config['color'])
+                Predator(self.parent, color=[self.predator_config['color'], "brown"])
             )
 
     

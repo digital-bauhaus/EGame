@@ -3,6 +3,7 @@ from game.individuals.desires import Desires
 from game.individuals.perception import Perception
 from random import randint, uniform
 import numpy as np
+from PyQt5.QtGui import QImage, QPixmap
 
 class Predator(Individual):
     def __init__(self,
@@ -17,6 +18,11 @@ class Predator(Individual):
         self.perception = Perception(self.predator_config["default_perception"], default=True)
         self.desires = Desires(self.predator_config["default_desires"], default=True)
         self.radius = self.predator_config['size']
+        self.image = [QImage(self.predator_config['image1']),
+                      QImage(self.predator_config['image2'])]
+
+
+    
 
         self.default_dmg = self.predator_config['default_dmg']
 
@@ -38,6 +44,8 @@ class Predator(Individual):
         else:
             _y = _yb
         self._position = np.array([_x, _y])
+        self.set_image()
+
 
     def add_attack_count(self, individual):
        """

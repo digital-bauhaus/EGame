@@ -3,13 +3,13 @@ from PyQt5.QtGui import QPainter, QColor, QFont, QBrush, QPen, QPolygonF
 from PyQt5.QtCore import QPointF
 
 class Corpse(GameItem):
-    def __init__(self, parent, boundary, poison, position):
+    def __init__(self, parent, boundary, poison, position, corpse_image):
         GameItem.__init__(self, parent, boundary, position)
         self.corpse_config = self.items_config['corpse']
         self.size = self.corpse_config['size']
         self.color = self.corpse_config['color']
         self.nutrition = self.corpse_config['nutrition']
-        self.image = self.corpse_config['image']
+        self.image = corpse_image
         self.poison = poison
 
     def draw(self, painter):

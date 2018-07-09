@@ -42,9 +42,11 @@ class Dot(Individual):
         if self.color[1] == "blue":
             self.image = [QImage(self.individual_config['image1_pop1']),
                           QImage(self.individual_config['image2_pop1'])]
+            self.corpse_image = QImage(self.individual_config['corpse_image1'])
         elif self.color[1] == "yellow":
             self.image = [QImage(self.individual_config['image1_pop2']),
                           QImage(self.individual_config['image2_pop2'])]
+            self.corpse_image = QImage(self.individual_config['corpse_image2'])
         self.set_image()
 
     def add_attack_count(self, individual):

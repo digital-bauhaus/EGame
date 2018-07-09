@@ -196,7 +196,8 @@ class EGame:
                     self.game_objects["corpse"].append(Corpse(self.parent, 
                                                             self.border_width,
                                                             i.poison,
-                                                            position=i._position))
+                                                            position=i._position,
+                                                            corpse_image=i.corpse_image))
                     i.dead = True
                     continue
                 # there is still an individual living
@@ -253,7 +254,8 @@ class EGame:
                 self.game_objects["corpse"].append(Corpse(self.parent,
                                                              self.border_width,
                                                              i.poison,
-                                                             position=i._position))
+                                                             position=i._position,
+                                                             corpse_image=i.corpse_image))
                 predators.remove(i)
                 continue
             # they only are interested in seeking individuals of all populations

@@ -46,6 +46,8 @@
                 "image2_pop1": "img/blue2.png",
                 "image1_pop2": "img/yellow1.png",
                 "image2_pop2": "img/yellow2.png",
+                "corpse_image1": "img/corpse_blue2.png",
+                "corpse_image2": "img/corpse_yellow.png",
                 "use_default_desires": false,
                 "default_desires": {
                     "absolute": 1,
@@ -90,6 +92,7 @@
                 "color": [139, 69, 19],
                 "image1": "img/predator1.png",
                 "image2": "img/predator2.png",
+                "corpse_image": "img/corpse_predator.png",
                 "default_dmg": 0.1,
                 "frame_health_reduce": 0.0005,
                 "default_perception": {
@@ -148,8 +151,6 @@
                 "corpse": {
                     "size": 10,
                     "color": "brown",
-                    "_image": "./img/meat.png",
-                    "image": "./img/corpse_blue2.png",
                     "nutrition": 0.1
                 },
                 "heal_potion": {

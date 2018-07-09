@@ -20,6 +20,7 @@ class Predator(Individual):
         self.radius = self.predator_config['size']
         self.image = [QImage(self.predator_config['image1']),
                       QImage(self.predator_config['image2'])]
+        self.corpse_image = QImage(self.predator_config['corpse_image'])
 
 
     

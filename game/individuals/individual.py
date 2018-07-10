@@ -64,12 +64,13 @@ class Individual(metaclass=abc.ABCMeta):
     def update(self):
         """update the object by applying acceleration to velocity"""
         # speed up
+        self.acceleration = self.limit(self.acceleration, self.max_force)
         self.velocity += self.acceleration
         # the velocity of an object should be limited
         self.velocity = self.limit(self.velocity, self.get_own_max_speed())
         self._position += self.velocity
         # reset acceleration after each iteration
-        self.acceleration *= 0
+        self.acceleration = 0
 
 
     def apply_force(self, force):
@@ -77,7 +78,7 @@ class Individual(metaclass=abc.ABCMeta):
         application of force 
         """
         self.acceleration += force
-        self.acceleration = self.limit(self.acceleration, self.get_own_max_speed())
+        self.acceleration = self.limit(self.acceleration, self.max_force)
 
 
     def seek(self, game_objects, seek_pop):
@@ -428,7 +429,7 @@ class Individual(metaclass=abc.ABCMeta):
         """
         if self.parent.parent_window.debug[setting]:
             color = QColor(color)
-            target = position + QPoint(vector[0]*10, vector[1]*10)
+            target = position + QPoint(vector[0]*100, vector[1]*100)
             painter.setBrush(color)
             painter.setPen(QColor("black"))
             painter.drawLine(position, target)

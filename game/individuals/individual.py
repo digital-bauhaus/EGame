@@ -46,8 +46,8 @@ class Individual(metaclass=abc.ABCMeta):
         else:
             self.radius = radius
         # let the individuals run in random directions at beginning
-        self.acceleration = np.array([uniform(-2,2), uniform(-2,2)])
-        self.velocity = np.array([0.0, 0.0])
+        self.acceleration = np.array([0.0, 0.0])
+        self.velocity = np.array([uniform(-0.5, 0.5), uniform(-0.5, 0.5)])
         self.max_speed = self.individual_config['max_speed']
         self.max_force = self.individual_config['max_force']
         # should the default config be used?
@@ -240,9 +240,13 @@ class Individual(metaclass=abc.ABCMeta):
             self.health -= receive_dmg
 
             # repell self a little in opposite direction
-            steer = self.velocity * -1
-            steer = self.limit(steer, self.max_force * pow(10, 10))
-            self.apply_force(steer)
+            # steer = self.velocity * -1
+            # steer = self.limit(steer, self.max_force * pow(10, 10))
+            # self.apply_force(steer)
+
+            # shorten the velocity
+            self.velocity = self.set_magnitude(self.velocity, np.linalg.norm(self.velocity)/2)
+
             self.add_attack_count(element[0])
             self.statistic.enemies_attacked += 1
 

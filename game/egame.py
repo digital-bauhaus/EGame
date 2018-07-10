@@ -213,7 +213,7 @@ class EGame:
 
         # check if all individuals are dead
         if all_dead:
-            self.end_game()
+            self.result = self.end_game()
 
     
     def end_game(self):

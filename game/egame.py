@@ -187,7 +187,11 @@ class EGame:
         """
         # check variable for end of session
         all_dead = True
+        visited = set()
         for i in population:
+            if i in visited:
+                continue
+            visited.add(i)
             # if the individual is not dead
             if not i.dead:
                 i.decrase_health()

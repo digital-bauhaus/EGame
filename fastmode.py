@@ -1,6 +1,10 @@
 from game.egame import EGame
-class Fastmode:
-    def __init__(self, config, optimizers, runs):
+import threading
+
+class Fastmode(threading.Thread):
+    def __init__(self, threadid, config, optimizers):
+        threading.Thread.__init__(self)
+        self.threadid = threadid
         self.config = config
         self.optimizers = optimizers
         self.global_config = self.config.global_config
@@ -14,14 +18,19 @@ class Fastmode:
         self.fg = FrameGeometry(self.global_config['frame']['width'],
                                 self.global_config['frame']['height'])
         self.msg2Statusbar = Msg2StatusBar()
-        
+
+
     def run(self):
+        print("starting thread", self.threadid)
         game = EGame(self)
         game.start()
         while game.running:
             game.update()
-        result = game.result
-        print(result)
+        # result is the winner of the game
+        # 0 = blue breeder, 1 = yellow breeder
+        self.result = game.result
+        print(self.result)
+        return self.result
 
     def frameGeometry(self):
         return self.fg

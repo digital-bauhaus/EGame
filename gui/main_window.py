@@ -24,18 +24,6 @@ class App(QMainWindow):
 
         self.initUI()
 
-        # if we have fastmode - run the game for the given amount
-        # if self.fastmode:
-        #     results = []
-        #     for i in range(self.fastmode_runs):
-        #         print("run", i+1, "of", self.fastmode_runs)
-        #         game_frame = GameFrame(self)
-        #         game_frame.start()
-        #         #TODO: collect results
-        #         # while game_frame.check_game_terminated:
-        #         #     sleep(1)
-        #         # results.append(game_frame.get_result())
-        #     print(results)
 
     def init_debug(self):
         """

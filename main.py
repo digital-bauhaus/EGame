@@ -7,6 +7,7 @@ from fastmode import Fastmode
 from config import Config
 import sys
 import importlib.util
+import threading
 if __name__ == "__main__":
 
     # program parameter:
@@ -32,9 +33,42 @@ if __name__ == "__main__":
     if len(sys.argv) > 4:
         fastmode = sys.argv[4]
         fastmode_runs = int(sys.argv[5])
-        
-        fastmode_instance = Fastmode(config, [module1, module2], fastmode_runs)
-        fastmode_instance.run()
+        threads = []
+        for i in range(fastmode_runs):
+            thread = Fastmode(i, config, [module1, module2])
+            threads.append(thread)
+            thread.start()
+        for thread in threads:
+            thread.join(600) # timeout in seconds 10min = 10*60 = 600
+        results = []
+        for thread in threads:
+            results.append(thread.result)
+        yellow = 0
+        blue = 0
+        too_long_computation = 0
+        for result in results:
+            if result == 0:
+                blue += 1
+            elif result == 1:
+                yellow += 1
+            else:
+                too_long_computation += 1
+        print("timeout threads (longer than 10min):", too_long_computation)
+        if yellow > blue:
+            print("yellow wins the competition with " + str(yellow) + ":" + str(blue))
+            winning_breeder = optimizer2_path
+        elif blue > yellow:
+            print("blue wins the competition with " + str(blue) + ":" + str(yellow))
+            winning_breeder = optimizer1_path
+        else:
+            print("we have a draw! " + str(blue) + ":" + str(yellow))
+            winning_breeder = "None"
+        with open("result.txt", "a") as f:
+            # the result of the runs + the path to the winning breeder
+            result = "blue:" + str(blue) + " yellow:" + str(yellow) + " OOT:" + str(too_long_computation)
+            # 2 = blue, 3 = yellow
+            result += " winner: " + winning_breeder
+            f.write(result + "\n")
 
     else:
         app = QApplication(sys.argv)

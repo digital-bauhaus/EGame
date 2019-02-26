@@ -21,14 +21,15 @@ class GameFrame(QFrame):
         else:
             self.game_speed = self.global_config['game_speed']
         self.init_frame()
-        self.setFixedSize(self.frame_dimension[0],
+        self.resize(self.frame_dimension[0],
                           self.frame_dimension[1])
         #self.setStyleSheet("background-color: " + \
         #    self.global_config['frame']['background_color'])
-        self.setStyleSheet("background-image: " + \
+        #self.setStyleSheet("background-image: " + \
+        #    self.global_config['frame']['background_image'])
+        self.setStyleSheet("border-image: " + \
             self.global_config['frame']['background_image'])
-        
-
+                
 
     def open_statistics(self):
         """
@@ -73,9 +74,13 @@ class GameFrame(QFrame):
             self.refresh_statistic_window()
 
 
+    def update_frame(self):
+        if self.isStarted:
+            self.game.update()
+        self.update()
+
     def stop_timer(self):
         self.timer.stop()
-
 
     def timerEvent(self, event):
         """

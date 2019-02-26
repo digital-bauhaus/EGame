@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QAction
+from PyQt5.QtWidgets import QMainWindow, QAction, QWidget, QHBoxLayout
 from PyQt5.QtGui import QIcon
-
+from PyQt5.QtCore import Qt
 from .game_frame import GameFrame
 
 import math, time
@@ -51,6 +51,7 @@ class App(QMainWindow):
                          self.resolution[0],
                          self.resolution[1])
         self.game_frame = GameFrame(self)
+       
         self.setCentralWidget(self.game_frame)
 
         # add top menu bar with items
@@ -65,8 +66,17 @@ class App(QMainWindow):
         # connect statusbar with messages from game_frame
         self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
 
+    def resizeEvent(self, event):
+        self.game_frame.resize(self.game_frame.sizeHint())
 
+    
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.showNormal()
+        if event.key() == Qt.Key_F11:
+            self.showFullScreen()
 
+        
     def add_main_menu_items(self):
         """
         add all Game menu items (Start Game and Exit)

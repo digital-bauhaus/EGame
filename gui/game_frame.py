@@ -28,7 +28,7 @@ class GameFrame(QFrame):
         #self.setStyleSheet("background-image: " + \
         #    self.global_config['frame']['background_image'])
         self.setStyleSheet("border-image: " + \
-            self.global_config['frame']['background_image'])
+            self.global_config['frame']['background_image'] + "; background-repeat: repeat -xy;")
                 
 
     def open_statistics(self):

@@ -15,6 +15,7 @@
                     "background_color": "rgb(255,255,255)",
                     "background_image": "url(./img/background.jpg)"
                 },
+                "breeder_directory":    "./genetic_algorithm/",
                 "game_speed": 20,
                 "border_width": 20,
                 "num_individuals": 10,

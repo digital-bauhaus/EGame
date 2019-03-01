@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QMainWindow, QFrame, QAction, QWidget, QHBoxLayout, QVBoxLayout, QRadioButton, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QFrame, QAction, QWidget, QHBoxLayout, QVBoxLayout, QCheckBox, QPushButton, QFileDialog, QComboBox, QLabel, QDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from .game_frame import GameFrame
 
+import os
 import math, time
 from time import sleep
 
@@ -53,6 +54,7 @@ class App(QMainWindow):
                          self.resolution[1])
 
         self.init_main_frame()
+        #self.init_options()
 
         # add top menu bar with items
         self.mainMenu = self.menuBar()
@@ -76,30 +78,32 @@ class App(QMainWindow):
         self.main_frame = QFrame(self)
 
         self.main_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
+        #self.main_frame.setStyleSheet("background-image: " + self.global_config['frame']['main_background_image'])
         self.main_frame.setFrameShape(QFrame.StyledPanel)
         self.main_frame.setFrameShadow(QFrame.Raised)
-        self.main_frame.resize(800,600)
+        self.main_frame.resize(self.width(), self.height())
 
         self.verticalLayoutWidget = QWidget(self.main_frame)
-        self.verticalLayoutWidget.resize(800,600)
+        self.verticalLayoutWidget.resize(self.width(), self.height())
         
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setAlignment(Qt.AlignCenter)
     
-        self.pushButton = QPushButton("Play", self.verticalLayoutWidget)
+        self.pushButton = QPushButton("Play New Game", self.verticalLayoutWidget)
         self.pushButton.setFlat(True)
         self.pushButton.setStyleSheet("color: white; font-weight: bold;font-size: 36px; font-family: Helvetica, sans-serif;")
-        self.pushButton.clicked.connect(self.handlePlayButton)
-
+        
+        self.pushButton.clicked.connect(self.handlePlayButtonMainMenu)
         self.verticalLayout.addWidget(self.pushButton)
+
         self.pushButton_3 = QPushButton("Options",self.verticalLayoutWidget)
         self.pushButton_3.setFlat(True)
         self.pushButton_3.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
         self.pushButton_3.clicked.connect(self.handleOptionsButton)
         self.verticalLayout.addWidget(self.pushButton_3)
 
-        self.pushButton_2 = QPushButton("Exit", self.verticalLayoutWidget)
+        self.pushButton_2 = QPushButton("Quit", self.verticalLayoutWidget)
         self.pushButton_2.setFlat(True)
         self.pushButton_2.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
         self.pushButton_2.clicked.connect(self.handleExitButton)
@@ -115,10 +119,10 @@ class App(QMainWindow):
 
         self.opt_frame.setFrameShape(QFrame.StyledPanel)
         self.opt_frame.setFrameShadow(QFrame.Raised)
-        self.resize(800,600)
+        self.opt_frame.resize(self.width(), self.height())
 
         self.vertLayoutW = QWidget(self.opt_frame)
-        self.vertLayoutW.resize(800,600)
+        self.vertLayoutW.resize(self.width(), self.height())
 
         self.vertLayout = QVBoxLayout(self.vertLayoutW)
         self.vertLayout.setContentsMargins(0, 0, 0, 0)
@@ -131,33 +135,90 @@ class App(QMainWindow):
         self.backButton.clicked.connect(self.backButtonPressed)
         self.backButton.resize(self.backButton.minimumSizeHint())
 
-        self.radioButton = QRadioButton("Show Debug options", self.vertLayoutW)
-        self.radioButton.toggled.connect(self.toggleOptions)
+        self.checkBox = QCheckBox("Show Debug options", self.vertLayoutW)
+        self.checkBox.toggled.connect(self.toggleOptions)
         
         if self.toggleDebug == True:
-            self.radioButton.setChecked(True)
+            self.checkBox.setChecked(True)
 
-        self.radioButton.setStyleSheet("QRadioButton{ color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;} QRadioButton::indicator { width: 25px; height: 25px;};")    
-        self.vertLayout.addWidget(self.radioButton, 0, Qt.AlignCenter)
+        self.checkBox.setStyleSheet("QCheckBox{ color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;} QCheckBox::indicator { width: 25px; height: 25px;};")    
+        self.vertLayout.addWidget(self.checkBox, 0, Qt.AlignCenter)
         self.vertLayout.addWidget(self.backButton, 0, Qt.AlignCenter)
+
    
+
+    def init_pregame(self):
+        """
+        screen before a game is played, let's you select a game mode and a breeder.py file
+        """
+        self.pregame_frame = QFrame(self)
+        self.pregame_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
+
+        self.pregame_frame.setFrameShape(QFrame.StyledPanel)
+        self.pregame_frame.setFrameShadow(QFrame.Raised)
+        self.pregame_frame.resize(self.width(), self.height())
+
+        self.preVertLayoutW = QWidget(self.pregame_frame)
+        self.preVertLayoutW.resize(self.width(), self.height())
+
+        self.preVertLayout = QVBoxLayout(self.preVertLayoutW)
+        self.preVertLayout.setContentsMargins(0, 0, 0, 0)
+        self.preVertLayout.setAlignment(Qt.AlignCenter)
+
+        self.selectorButton = QPushButton("Click to select your breeder class", self.preVertLayoutW)
+        self.selectorButton.setFlat(True)
+        self.selectorButton.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
+        self.selectorButton.clicked.connect(self.select_breeder)
+
+        self.modeText = QLabel(self.preVertLayoutW)
+        self.modeText.setText("Game mode:")
+        self.modeText.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
+
+        self.modeSelect = QComboBox(self.preVertLayoutW)
+        self.modeSelect.addItem('Normal')
+        # add new modes here
+        self.modeSelect.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
+        self.modeSelect.currentIndexChanged.connect(self.mode_select)
+        
+        self.preHorizontalLayoutW = QWidget(self.pregame_frame)
+
+        self.preHorizontalLayout = QHBoxLayout(self.preHorizontalLayoutW)
+        self.preHorizontalLayout.setAlignment(Qt.AlignBottom)
+
+        self.playButton = QPushButton("Play", self.preHorizontalLayoutW)
+        self.playButton.setFlat(True)
+        self.playButton.setStyleSheet("color: rgb(211,211,211); font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.playButton.clicked.connect(self.handlePlayButton)
+
+        self.preBackButton = QPushButton("Back", self.preHorizontalLayoutW)
+        self.preBackButton.setFlat(True)
+        self.preBackButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.preBackButton.clicked.connect(self.backButtonPressed)
+     
+        self.preHorizontalLayout.addWidget(self.preBackButton)
+        self.preHorizontalLayout.addWidget(self.playButton)
+
+        self.preVertLayout.addWidget(self.selectorButton)
+        self.preVertLayout.addWidget(self.modeText)
+        self.preVertLayout.addWidget(self.modeSelect)
+        self.preVertLayout.addWidget(self.preHorizontalLayoutW)
+
+        # only press play when a breeder is selected
+        self.playButton.setEnabled(False)
+
+    def handlePlayButtonMainMenu(self):
+        """
+        Play is pressed in the main menu
+        """
+        self.init_pregame()
+        self.setCentralWidget(self.pregame_frame)
+        self.show()
 
     def handlePlayButton(self):
         """
-       Play is pressed in Main menu
+       Play is pressed in pre game menu
         """
-        self.gameMenu.setEnabled(True)
-        if self.toggleDebug == True:
-            self.optionMenu.setEnabled(True)
-        
-        self.game_frame = GameFrame(self)
-        self.setCentralWidget(self.game_frame)
-
-        # connect statusbar with messages from game_frame
-        self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
-
-        self.start_game()
-        #self.show()
+        self.play_game()
 
     def handleOptionsButton(self):
         """
@@ -184,7 +245,7 @@ class App(QMainWindow):
         """
         Debug toggle button to enable/disable debug settings
         """
-        if self.radioButton.isChecked() == True:
+        if self.checkBox.isChecked() == True:
             self.toggleDebug = True
         else:
             self.toggleDebug = False
@@ -192,20 +253,29 @@ class App(QMainWindow):
     def resizeEvent(self, event):
         """
         Window size has changed, resize frames accordingly 
-        """
-        if hasattr(self, 'game_frame') and self.game_frame is not None:
-            self.game_frame.resize(self.width(), self.height())
-        
+        BUG: It sometimes throws a Runtime Error because the garbage collector of PyQT has deleted a frame. It still works though.  
+        """       
         if hasattr(self, 'main_frame') and self.main_frame is not None:
             self.main_frame.resize(self.width(), self.height())
             if hasattr(self, 'verticalLayoutWidget') and self.verticalLayoutWidget is not None:
                 self.verticalLayoutWidget.resize(self.width(), self.height())
         
+        if hasattr(self, 'pregame_frame') and self.pregame_frame is not None:
+            self.pregame_frame.resize(self.width(), self.height())
+            if hasattr(self, 'preVertLayoutW') and self.preVertLayoutW is not None:
+                self.preVertLayoutW.resize(self.width(), self.height())
+                print("resizing preVertLayoutW")
+
         if hasattr(self, 'opt_frame') and self.opt_frame is not None:    
             self.opt_frame.resize(self.width(), self.height())
             if hasattr(self, 'vertLayoutW') and self.vertLayoutW is not None:
                 self.vertLayoutW.resize(self.width(), self.height())
-    
+
+
+        if hasattr(self, 'game_frame') and self.game_frame is not None:
+            self.game_frame.resize(self.width(), self.height())        
+
+
     
     def keyPressEvent(self, event):
         """
@@ -217,6 +287,26 @@ class App(QMainWindow):
             self.showFullScreen()
 
 
+    def mode_select(self, index):
+        """
+        A mode in the pregame screen was selected, change game mode
+        """
+
+    def select_breeder(self):
+        """
+        File selector dialog to open breeder classes
+        """
+        fileDir = os.getcwd() + '/genetic_algorithm'
+        self.fileSelector = QFileDialog(None, 'Select breeder class', self.config.global_config["breeder_directory"], "Python files (*.py)")
+        self.fileSelector.setFileMode(QFileDialog.ExistingFiles)
+        
+        if self.fileSelector.exec_() == QDialog.Accepted:
+            self.breeder = self.fileSelector.selectedFiles()[0]
+            self.playButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+            self.playButton.setEnabled(True)
+            # Do something with the file
+        
+    
     def add_main_menu_items(self):
         """
         add all Game menu items (Start new game, back to main menu and Exit)
@@ -246,9 +336,29 @@ class App(QMainWindow):
         reinitialize main menu screen
         """
         self.init_main_frame()
+        self.gameMenu.setEnabled(False)
+        self.optionMenu.setEnabled(False)
         self.setCentralWidget(self.main_frame)
         self.verticalLayoutWidget.resize(self.width(), self.height())
         self.show()
+
+    
+    def play_game(self):
+        self.gameMenu.setEnabled(True)
+        self.optionMenu.setEnabled(True)
+        
+        if self.toggleDebug == True:
+            self.toggleMenu.setEnabled(True)
+        else:
+            self.toggleMenu.setEnabled(False)
+        
+        self.game_frame = GameFrame(self)
+        self.setCentralWidget(self.game_frame)
+
+        # connect statusbar with messages from game_frame
+        self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
+
+        self.start_game()
 
     def start_game(self):
         """
@@ -265,6 +375,7 @@ class App(QMainWindow):
         """
         # create a submenu
         self.toggleMenu = self.optionMenu.addMenu("Debug")
+        self.toggleMenu.setStatusTip("Can be enabled in the settings")
         self.add_toggle_menu_items()
         self.add_statistics_menu()
 

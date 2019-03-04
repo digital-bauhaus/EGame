@@ -217,7 +217,8 @@ class EGame:
 
         # check if all individuals are dead
         if all_dead:
-            self.result = self.end_game()
+            self.result, self.winner_color = self.end_game()
+            self.parent.parent_window.game_over(self.winner_color)
 
     
     def end_game(self):
@@ -236,13 +237,13 @@ class EGame:
             if all_dead:
                 print(self.colors[pop][1], "lost")
                 winner = (j + 1) % 2
-                w_str = self.colors[pops[winner]][1]
+                w_str = self.colors[pops[winner]][1].capitalize()
 
                 self.parent.msg2Statusbar.emit(
                     str("Game Over! " + w_str + " wins!"))
         print("end of game")
         self.running = False
-        return winner
+        return winner, w_str
         # TODO: print results to logfile in order to analyze it later
 
     

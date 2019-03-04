@@ -9,13 +9,17 @@ class GameFrame(QFrame):
 
     msg2Statusbar = pyqtSignal(str)
 
-    def __init__(self, parent):
+    def __init__(self, parent, frame_width=None, frame_height=None):
         super().__init__(parent)
         self.parent_window = parent
         self.config = parent.config
         self.global_config = parent.global_config
-        self.frame_dimension = (self.global_config['frame']['width'],
-                                self.global_config['frame']['height'])
+        if frame_width is None and frame_height is None:
+            self.frame_dimension = (self.global_config['frame']['width'],
+                                   self.global_config['frame']['height']) 
+        else:    
+            self.frame_dimension = (frame_width, frame_height)
+
         if self.parent_window.fastmode:
             self.game_speed = 0
         else:
@@ -27,9 +31,16 @@ class GameFrame(QFrame):
         #    self.global_config['frame']['background_color'])
         #self.setStyleSheet("background-image: " + \
         #    self.global_config['frame']['background_image'])
-        self.setStyleSheet("border-image: " + \
-            self.global_config['frame']['background_image'] + "; background-repeat: repeat -xy;")
+        self.setStyleSheet("background-image: " + \
+            self.global_config['frame']['background_image'])
                 
+
+    def resize_frame(self, width, height):
+        """
+        resize frame and adjust frame_dimension
+        """
+        self.resize(width, height)
+        self.frame_dimension = (width, height)
 
     def open_statistics(self):
         """

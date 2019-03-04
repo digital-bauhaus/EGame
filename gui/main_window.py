@@ -54,7 +54,6 @@ class App(QMainWindow):
                          self.resolution[1])
 
         self.init_main_frame()
-        #self.init_options()
 
         # add top menu bar with items
         self.mainMenu = self.menuBar()
@@ -65,7 +64,7 @@ class App(QMainWindow):
 
         self.gameMenu.setEnabled(False)
         self.optionMenu.setEnabled(False)
-
+        self.mainMenu.setVisible(False)
 
 
         self.statusbar = self.statusBar()
@@ -206,6 +205,100 @@ class App(QMainWindow):
         # only press play when a breeder is selected
         self.playButton.setEnabled(False)
 
+
+    def init_gameover_frame(self, winner=None):
+        """
+        screen when a game is done
+        """
+        self.gameover_frame = QFrame(self)
+        self.gameover_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
+
+        self.gameover_frame.setFrameShape(QFrame.StyledPanel)
+        self.gameover_frame.setFrameShadow(QFrame.Raised)
+        self.gameover_frame.resize(self.width(), self.height())
+
+        self.overVertLayoutW = QWidget(self.gameover_frame)
+        self.overVertLayoutW.resize(self.width(), self.height())
+
+        self.overVertLayout = QVBoxLayout(self.overVertLayoutW)
+        self.overVertLayout.setContentsMargins(0, 0, 0, 0)
+        self.overVertLayout.setAlignment(Qt.AlignCenter)
+
+        self.gameOverText = QLabel(self.overVertLayoutW)
+        self.gameOverText.setText("Game over. " + winner + " won!")
+        self.gameOverText.setStyleSheet("color: white; font-weight: bold; font-size: 46px; font-family: Helvetica, sans-serif;")
+
+        self.overHorizontalLayoutW = QWidget(self.gameover_frame)
+
+        self.overHorizontalLayout = QHBoxLayout(self.overHorizontalLayoutW)
+        self.overHorizontalLayout.setAlignment(Qt.AlignBottom)
+
+        self.playAgainButton = QPushButton("New Game", self.overHorizontalLayoutW)
+        self.playAgainButton.setFlat(True)
+        self.playAgainButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.playAgainButton.clicked.connect(self.handlePlayButtonMainMenu)
+
+        self.backToMMButton = QPushButton("Back", self.overHorizontalLayoutW)
+        self.backToMMButton.setFlat(True)
+        self.backToMMButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.backToMMButton.clicked.connect(self.backToMenuButton)
+
+        self.quitGameButton = QPushButton("Quit", self.overHorizontalLayoutW)
+        self.quitGameButton.setFlat(True)
+        self.quitGameButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.quitGameButton.clicked.connect(self.handleExitButton)
+
+
+        self.overHorizontalLayout.addWidget(self.playAgainButton)
+        self.overHorizontalLayout.addWidget(self.backToMMButton)
+        self.overHorizontalLayout.addWidget(self.quitGameButton)
+
+        self.overVertLayout.addWidget(self.gameOverText)
+        self.overVertLayout.addWidget(self.overHorizontalLayoutW)
+
+
+    def play_game(self):
+        """
+
+        """
+        self.statusbar.setVisible(True)
+        self.mainMenu.setVisible(True)
+        self.gameMenu.setEnabled(True)
+        self.optionMenu.setEnabled(True)
+        
+        if self.toggleDebug == True:
+            self.toggleMenu.setEnabled(True)
+        else:
+            self.toggleMenu.setEnabled(False)
+        
+        self.game_frame = GameFrame(self, self.width(), self.height())
+        self.setCentralWidget(self.game_frame)
+
+        # connect statusbar with messages from game_frame
+        self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
+
+        self.start_game()
+
+
+    def start_game(self):
+        """
+        start the game (create a new game instance)
+        """
+        # enable the statistic button in the top menu bar
+        self.statistic_button.setEnabled(True)
+        self.game_frame.start()
+
+
+    def game_over(self, winner):
+        """
+        Game is finished (this method is called from egame.py)
+        """
+        self.init_gameover_frame(winner)
+        self.setCentralWidget(self.gameover_frame)
+        self.statusbar.setVisible(False)
+        self.show()
+
+
     def handlePlayButtonMainMenu(self):
         """
         Play is pressed in the main menu
@@ -214,11 +307,14 @@ class App(QMainWindow):
         self.setCentralWidget(self.pregame_frame)
         self.show()
 
+
     def handlePlayButton(self):
         """
        Play is pressed in pre game menu
         """
+        self.statusbar.setVisible(True)
         self.play_game()
+
 
     def handleOptionsButton(self):
         """
@@ -235,11 +331,13 @@ class App(QMainWindow):
         """
         self.close()  
 
+
     def backButtonPressed(self):
         """
         Back button in options frame
         """
         self.backToMenu()
+
 
     def toggleOptions(self):
         """
@@ -249,6 +347,7 @@ class App(QMainWindow):
             self.toggleDebug = True
         else:
             self.toggleDebug = False
+
 
     def resizeEvent(self, event):
         """
@@ -271,9 +370,13 @@ class App(QMainWindow):
             if hasattr(self, 'vertLayoutW') and self.vertLayoutW is not None:
                 self.vertLayoutW.resize(self.width(), self.height())
 
-
-        if hasattr(self, 'game_frame') and self.game_frame is not None:
-            self.game_frame.resize(self.width(), self.height())        
+        if hasattr(self, 'game_frame') and self.game_frame is not None:        
+            self.game_frame.resize_frame(self.width(), self.height())
+        
+        if hasattr(self, 'gameover_frame') and self.gameover_frame is not None:
+            self.gameover_frame.resize(self.width(), self.height())
+            if hasattr(self, 'overVertLayoutW') and self.overVertLayoutW is not None:
+                self.overVertLayoutW.resize(self.width(), self.height())
 
 
     
@@ -291,6 +394,7 @@ class App(QMainWindow):
         """
         A mode in the pregame screen was selected, change game mode
         """
+
 
     def select_breeder(self):
         """
@@ -341,32 +445,6 @@ class App(QMainWindow):
         self.setCentralWidget(self.main_frame)
         self.verticalLayoutWidget.resize(self.width(), self.height())
         self.show()
-
-    
-    def play_game(self):
-        self.gameMenu.setEnabled(True)
-        self.optionMenu.setEnabled(True)
-        
-        if self.toggleDebug == True:
-            self.toggleMenu.setEnabled(True)
-        else:
-            self.toggleMenu.setEnabled(False)
-        
-        self.game_frame = GameFrame(self)
-        self.setCentralWidget(self.game_frame)
-
-        # connect statusbar with messages from game_frame
-        self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
-
-        self.start_game()
-
-    def start_game(self):
-        """
-        start the game (create a new game instance)
-        """
-        # enable the statistic button in the top menu bar
-        self.statistic_button.setEnabled(True)
-        self.game_frame.start()
 
 
     def add_option_menu_items(self):

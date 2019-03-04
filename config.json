@@ -13,7 +13,7 @@
                     "width": 800,
                     "height": 600,
                     "background_color": "rgb(255,255,255)",
-                    "background_image": "url(./img/background.jpg)"
+                    "background_image": "url(./img/background_grass_seamless.jpg)"
                 },
                 "breeder_directory":    "./genetic_algorithm/",
                 "game_speed": 20,

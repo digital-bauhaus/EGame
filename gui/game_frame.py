@@ -9,7 +9,7 @@ class GameFrame(QFrame):
 
     msg2Statusbar = pyqtSignal(str)
 
-    def __init__(self, parent, frame_width=None, frame_height=None):
+    def __init__(self, parent, gameMode, frame_width=None, frame_height=None):
         super().__init__(parent)
         self.parent_window = parent
         self.config = parent.config
@@ -24,16 +24,25 @@ class GameFrame(QFrame):
             self.game_speed = 0
         else:
             self.game_speed = self.global_config['game_speed']
+        self.gameMode = gameMode
         self.init_frame()
         self.resize(self.frame_dimension[0],
                           self.frame_dimension[1])
+        self.set_background()
+
+                
+
+    def set_background(self):
+        """
+        Sets the background image in accordance with the game mode
+        """        
         #self.setStyleSheet("background-color: " + \
         #    self.global_config['frame']['background_color'])
         #self.setStyleSheet("background-image: " + \
         #    self.global_config['frame']['background_image'])
-        self.setStyleSheet("background-image: " + \
-            self.global_config['frame']['background_image'])
-                
+        pathToFile = self.global_config['frame'][self.gameMode+'_background_image']
+        self.setStyleSheet("background-image: " + pathToFile)
+
 
     def resize_frame(self, width, height):
         """

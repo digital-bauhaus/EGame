@@ -3,18 +3,24 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from .game_frame import GameFrame
 
+import importlib.util
 import os
 import math, time
 from time import sleep
 
 class App(QMainWindow):
-    def __init__(self, config, optimizers, fastmode=False, fastmode_runs=0, parent=None):
+    def __init__(self, config, fastmode=False, fastmode_runs=0, parent=None):
         super(App, self).__init__(parent=parent)
         self.toggleDebug = False
+        self.selectedBreederBlue = False
+        self.selectedBreederYellow = False
         self.config = config
         self.fastmode = fastmode
         self.fastmode_runs = fastmode_runs
-        self.optimizers = optimizers
+        self.gameModes = ['Normal', 'Beach', 'Street', 'Magma', 'Terrace', 'Snow']
+        self.selectedMode = 'normal'
+
+        #self.optimizers = optimizers
         self.global_config = self.config.global_config
         self.padding = (200, 200)
         self.resolution = (self.global_config['window']['width'],
@@ -61,7 +67,7 @@ class App(QMainWindow):
         self.optionMenu = self.mainMenu.addMenu('Options')
         self.add_option_menu_items()
         self.add_main_menu_items()
-
+        # disable so they won't show in the main menu
         self.gameMenu.setEnabled(False)
         self.optionMenu.setEnabled(False)
         self.mainMenu.setVisible(False)
@@ -76,8 +82,9 @@ class App(QMainWindow):
         """
         self.main_frame = QFrame(self)
 
+        
         self.main_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
-        #self.main_frame.setStyleSheet("background-image: " + self.global_config['frame']['main_background_image'])
+
         self.main_frame.setFrameShape(QFrame.StyledPanel)
         self.main_frame.setFrameShadow(QFrame.Raised)
         self.main_frame.resize(self.width(), self.height())
@@ -164,18 +171,24 @@ class App(QMainWindow):
         self.preVertLayout.setContentsMargins(0, 0, 0, 0)
         self.preVertLayout.setAlignment(Qt.AlignCenter)
 
-        self.selectorButton = QPushButton("Click to select your breeder class", self.preVertLayoutW)
+        self.selectorButton = QPushButton("Click to select the breeder class for Blue", self.preVertLayoutW)
         self.selectorButton.setFlat(True)
         self.selectorButton.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
-        self.selectorButton.clicked.connect(self.select_breeder)
+        self.selectorButton.clicked.connect(self.select_breeder_blue)
+
+        self.selector2Button = QPushButton("Click to select the breeder class for Yellow", self.preVertLayoutW)
+        self.selector2Button.setFlat(True)
+        self.selector2Button.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
+        self.selector2Button.clicked.connect(self.select_breeder_yellow)
 
         self.modeText = QLabel(self.preVertLayoutW)
         self.modeText.setText("Game mode:")
         self.modeText.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
 
         self.modeSelect = QComboBox(self.preVertLayoutW)
-        self.modeSelect.addItem('Normal')
-        # add new modes here
+        for mode in self.gameModes:
+            self.modeSelect.addItem(mode)
+
         self.modeSelect.setStyleSheet("color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;")
         self.modeSelect.currentIndexChanged.connect(self.mode_select)
         
@@ -198,6 +211,7 @@ class App(QMainWindow):
         self.preHorizontalLayout.addWidget(self.playButton)
 
         self.preVertLayout.addWidget(self.selectorButton)
+        self.preVertLayout.addWidget(self.selector2Button)
         self.preVertLayout.addWidget(self.modeText)
         self.preVertLayout.addWidget(self.modeSelect)
         self.preVertLayout.addWidget(self.preHorizontalLayoutW)
@@ -259,19 +273,23 @@ class App(QMainWindow):
 
     def play_game(self):
         """
-
+        starts a new game
         """
+        #Enable top menu and status bar
         self.statusbar.setVisible(True)
         self.mainMenu.setVisible(True)
         self.gameMenu.setEnabled(True)
         self.optionMenu.setEnabled(True)
         
+        self.selectedBreederBlue = False
+        self.selectedBreederYellow = False
+        # check whether debug settings were enabled in the options menu
         if self.toggleDebug == True:
             self.toggleMenu.setEnabled(True)
         else:
             self.toggleMenu.setEnabled(False)
         
-        self.game_frame = GameFrame(self, self.width(), self.height())
+        self.game_frame = GameFrame(self, self.selectedMode, self.width(), self.height())
         self.setCentralWidget(self.game_frame)
 
         # connect statusbar with messages from game_frame
@@ -310,7 +328,7 @@ class App(QMainWindow):
 
     def handlePlayButton(self):
         """
-       Play is pressed in pre game menu
+        Play is pressed in pre game menu
         """
         self.statusbar.setVisible(True)
         self.play_game()
@@ -349,84 +367,6 @@ class App(QMainWindow):
             self.toggleDebug = False
 
 
-    def resizeEvent(self, event):
-        """
-        Window size has changed, resize frames accordingly 
-        BUG: It sometimes throws a Runtime Error because the garbage collector of PyQT has deleted a frame. It still works though.  
-        """       
-        if hasattr(self, 'main_frame') and self.main_frame is not None:
-            self.main_frame.resize(self.width(), self.height())
-            if hasattr(self, 'verticalLayoutWidget') and self.verticalLayoutWidget is not None:
-                self.verticalLayoutWidget.resize(self.width(), self.height())
-        
-        if hasattr(self, 'pregame_frame') and self.pregame_frame is not None:
-            self.pregame_frame.resize(self.width(), self.height())
-            if hasattr(self, 'preVertLayoutW') and self.preVertLayoutW is not None:
-                self.preVertLayoutW.resize(self.width(), self.height())
-                print("resizing preVertLayoutW")
-
-        if hasattr(self, 'opt_frame') and self.opt_frame is not None:    
-            self.opt_frame.resize(self.width(), self.height())
-            if hasattr(self, 'vertLayoutW') and self.vertLayoutW is not None:
-                self.vertLayoutW.resize(self.width(), self.height())
-
-        if hasattr(self, 'game_frame') and self.game_frame is not None:        
-            self.game_frame.resize_frame(self.width(), self.height())
-        
-        if hasattr(self, 'gameover_frame') and self.gameover_frame is not None:
-            self.gameover_frame.resize(self.width(), self.height())
-            if hasattr(self, 'overVertLayoutW') and self.overVertLayoutW is not None:
-                self.overVertLayoutW.resize(self.width(), self.height())
-
-
-    
-    def keyPressEvent(self, event):
-        """
-        F11 = fullscreen, Esc = back to normal size window
-        """
-        if event.key() == Qt.Key_Escape:
-            self.showNormal()
-        if event.key() == Qt.Key_F11:
-            self.showFullScreen()
-
-
-    def mode_select(self, index):
-        """
-        A mode in the pregame screen was selected, change game mode
-        """
-
-
-    def select_breeder(self):
-        """
-        File selector dialog to open breeder classes
-        """
-        fileDir = os.getcwd() + '/genetic_algorithm'
-        self.fileSelector = QFileDialog(None, 'Select breeder class', self.config.global_config["breeder_directory"], "Python files (*.py)")
-        self.fileSelector.setFileMode(QFileDialog.ExistingFiles)
-        
-        if self.fileSelector.exec_() == QDialog.Accepted:
-            self.breeder = self.fileSelector.selectedFiles()[0]
-            self.playButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
-            self.playButton.setEnabled(True)
-            # Do something with the file
-        
-    
-    def add_main_menu_items(self):
-        """
-        add all Game menu items (Start new game, back to main menu and Exit)
-        """
-        self.startButton = QAction('Restart', self)
-        self.startButton.triggered.connect(lambda: self.start_game())
-        self.exitButton = QAction('Exit', self)
-        self.exitButton.triggered.connect(self.close)
-        self.backMenuButton = QAction('Back to Main Menu', self)
-        self.backMenuButton.triggered.connect(self.backToMenuButton)
-
-        self.gameMenu.addAction(self.startButton)
-        self.gameMenu.addAction(self.backMenuButton)
-        self.gameMenu.addAction(self.exitButton)
-
-
     def backToMenuButton(self):
         """
         Game is stopped and main menu is shown
@@ -445,6 +385,120 @@ class App(QMainWindow):
         self.setCentralWidget(self.main_frame)
         self.verticalLayoutWidget.resize(self.width(), self.height())
         self.show()
+
+
+    def mode_select(self, index):
+        """
+        A mode in the pregame screen was selected, change game mode
+        """
+        self.selectedMode = self.modeSelect.currentText().lower()
+
+
+    def select_breeder_blue(self):
+        """
+        File selector dialog to open a breeder class
+        """
+        self.breederBluePath = QFileDialog.getOpenFileName(None, 'Select breeder class', self.config.global_config["breeder_directory"], "Python files (*.py)")
+
+        if self.breederBluePath != '':
+            self.selectedBreederBlue = True
+            self.breederBluePath = self.breederBluePath[0]
+            self.check_selection()
+        
+    
+    def select_breeder_yellow(self):
+        """"
+        File selector dialog to open a second breeder class
+        """
+        self.breederYellowPath = QFileDialog.getOpenFileName(None, 'Select breeder class', self.config.global_config["breeder_directory"], "Python files (*.py)")
+        
+        if self.breederYellowPath != '':
+            self.selectedBreederYellow = True
+            self.breederYellowPath = self.breederYellowPath[0]
+            self.check_selection()
+
+            
+    def resizeEvent(self, event):
+        """
+        Window size has changed, resize frames accordingly 
+        BUG: It sometimes throws a Runtime Error because the garbage collector of PyQT has deleted a frame. It still works though.  
+        """   
+        try:    
+            if hasattr(self, 'main_frame') and self.main_frame is not None:
+                self.main_frame.resize(self.width(), self.height())
+                if hasattr(self, 'verticalLayoutWidget') and self.verticalLayoutWidget is not None:
+                    self.verticalLayoutWidget.resize(self.width(), self.height())
+            
+            if hasattr(self, 'pregame_frame') and self.pregame_frame is not None:
+                self.pregame_frame.resize(self.width(), self.height())
+                if hasattr(self, 'preVertLayoutW') and self.preVertLayoutW is not None:
+                    self.preVertLayoutW.resize(self.width(), self.height())
+                    print("resizing preVertLayoutW")
+
+            if hasattr(self, 'opt_frame') and self.opt_frame is not None:    
+                self.opt_frame.resize(self.width(), self.height())
+                if hasattr(self, 'vertLayoutW') and self.vertLayoutW is not None:
+                    self.vertLayoutW.resize(self.width(), self.height())
+
+            if hasattr(self, 'game_frame') and self.game_frame is not None:        
+                self.game_frame.resize_frame(self.width(), self.height())
+            
+            if hasattr(self, 'gameover_frame') and self.gameover_frame is not None:
+                self.gameover_frame.resize(self.width(), self.height())
+                if hasattr(self, 'overVertLayoutW') and self.overVertLayoutW is not None:
+                    self.overVertLayoutW.resize(self.width(), self.height())
+        # not so nice workaround for the bug stated above 
+        except RuntimeError:
+            pass
+
+    
+    def keyPressEvent(self, event):
+        """
+        F11 = fullscreen, Esc = back to normal size window
+        """
+        if event.key() == Qt.Key_Escape:
+            self.showNormal()
+        if event.key() == Qt.Key_F11:
+            self.showFullScreen()
+    
+    
+    def check_selection(self):
+        """
+        checks if two files were selected, if yes, load the classes and enable the play button
+        """
+        if self.selectedBreederBlue == True and self.selectedBreederYellow == True:
+            self.playButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+            self.playButton.setEnabled(True)        
+            self.optimizers = self.load_breeders(self.breederBluePath, self.breederYellowPath)
+
+
+    def load_breeders(self, path1, path2):
+        """
+        Loades breeder classes (this code was previously in main.py)
+        """
+        spec1 = importlib.util.spec_from_file_location("opti1", path1)
+        spec2 = importlib.util.spec_from_file_location("opti2", path2)
+        module1 = importlib.util.module_from_spec(spec1)
+        module2 = importlib.util.module_from_spec(spec2)
+        spec1.loader.exec_module(module1)
+        spec2.loader.exec_module(module2)
+        return [module1, module2]
+
+    
+    def add_main_menu_items(self):
+        """
+        add all Game menu items (Start new game, back to main menu and Exit)
+        """
+        self.startButton = QAction('Restart', self)
+        self.startButton.triggered.connect(lambda: self.start_game())
+        self.exitButton = QAction('Exit', self)
+        self.exitButton.triggered.connect(self.close)
+        self.backMenuButton = QAction('Back to Main Menu', self)
+        self.backMenuButton.triggered.connect(self.backToMenuButton)
+
+        self.gameMenu.addAction(self.startButton)
+        self.gameMenu.addAction(self.backMenuButton)
+        self.gameMenu.addAction(self.exitButton)
 
 
     def add_option_menu_items(self):

@@ -5,7 +5,7 @@ EGame is a competitive evolutionary game designed by the research group Intellig
 Two populations compete to survive in a changing environment.
 Endangered by extinction, hunting predators, and other factors.
 
-![game](./documentation/new_game.png)
+![game](./documentation/newgame.png)
 
 # Requirements
 - Python3

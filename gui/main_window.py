@@ -11,9 +11,11 @@ from time import sleep
 class App(QMainWindow):
     def __init__(self, config, fastmode=False, fastmode_runs=0, parent=None):
         super(App, self).__init__(parent=parent)
+        
         self.toggleDebug = False
         self.selectedBreederBlue = False
         self.selectedBreederYellow = False
+        
         self.config = config
         self.fastmode = fastmode
         self.fastmode_runs = fastmode_runs
@@ -72,84 +74,78 @@ class App(QMainWindow):
         self.optionMenu.setEnabled(False)
         self.mainMenu.setVisible(False)
 
-
         self.statusbar = self.statusBar()
 
 
     def init_main_frame(self):
         """
-        Initialize the Main Menu (start screen)
+        Initialize the Main Menu GUI (start screen)
         """
-        self.main_frame = QFrame(self)
-
-        
+        self.main_frame = QFrame(self)      
         self.main_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
-
         self.main_frame.setFrameShape(QFrame.StyledPanel)
         self.main_frame.setFrameShadow(QFrame.Raised)
-        self.main_frame.resize(self.width(), self.height())
+        self.main_frame.resize(self.width(), self.height()) #adaptive size to ensure correct size when resizing
 
-        self.verticalLayoutWidget = QWidget(self.main_frame)
-        self.verticalLayoutWidget.resize(self.width(), self.height())
+        self.mainVerticalLayoutWidget = QWidget(self.main_frame)
+        self.mainVerticalLayoutWidget.resize(self.width(), self.height())
         
-        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setAlignment(Qt.AlignCenter)
+        self.mainVerticalLayout = QVBoxLayout(self.mainVerticalLayoutWidget)
+        self.mainVerticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.mainVerticalLayout.setAlignment(Qt.AlignCenter)
     
-        self.pushButton = QPushButton("Play New Game", self.verticalLayoutWidget)
+        self.pushButton = QPushButton("Play New Game", self.mainVerticalLayoutWidget)
         self.pushButton.setFlat(True)
         self.pushButton.setStyleSheet("color: white; font-weight: bold;font-size: 36px; font-family: Helvetica, sans-serif;")
-        
         self.pushButton.clicked.connect(self.handlePlayButtonMainMenu)
-        self.verticalLayout.addWidget(self.pushButton)
 
-        self.pushButton_3 = QPushButton("Options",self.verticalLayoutWidget)
-        self.pushButton_3.setFlat(True)
-        self.pushButton_3.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
-        self.pushButton_3.clicked.connect(self.handleOptionsButton)
-        self.verticalLayout.addWidget(self.pushButton_3)
-
-        self.pushButton_2 = QPushButton("Quit", self.verticalLayoutWidget)
+        self.pushButton_2 = QPushButton("Options",self.mainVerticalLayoutWidget)
         self.pushButton_2.setFlat(True)
         self.pushButton_2.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
-        self.pushButton_2.clicked.connect(self.handleExitButton)
-        self.verticalLayout.addWidget(self.pushButton_2)
+        self.pushButton_2.clicked.connect(self.handleOptionsButton)
+        
+        self.pushButton_3 = QPushButton("Quit", self.mainVerticalLayoutWidget)
+        self.pushButton_3.setFlat(True)
+        self.pushButton_3.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
+        self.pushButton_3.clicked.connect(self.handleExitButton)
+
+        self.mainVerticalLayout.addWidget(self.pushButton)
+        self.mainVerticalLayout.addWidget(self.pushButton_2)
+        self.mainVerticalLayout.addWidget(self.pushButton_3)
     
 
     def init_options(self):
         """
-        Initialize the Options Menu
+        Initialize the Options Menu UI
         """
         self.opt_frame = QFrame(self)
         self.opt_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
-
         self.opt_frame.setFrameShape(QFrame.StyledPanel)
         self.opt_frame.setFrameShadow(QFrame.Raised)
         self.opt_frame.resize(self.width(), self.height())
 
-        self.vertLayoutW = QWidget(self.opt_frame)
-        self.vertLayoutW.resize(self.width(), self.height())
+        self.optVertLayoutW = QWidget(self.opt_frame)
+        self.optVertLayoutW.resize(self.width(), self.height())
 
-        self.vertLayout = QVBoxLayout(self.vertLayoutW)
-        self.vertLayout.setContentsMargins(0, 0, 0, 0)
-        self.vertLayout.setAlignment(Qt.AlignCenter)
+        self.optVertLayout = QVBoxLayout(self.optVertLayoutW)
+        self.optVertLayout.setContentsMargins(0, 0, 0, 0)
+        self.optVertLayout.setAlignment(Qt.AlignCenter)
 
-        self.backButton = QPushButton("Back", self.vertLayoutW)
+        self.backButton = QPushButton("Back", self.optVertLayoutW)
         self.backButton.setFlat(True)
         self.backButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
-
         self.backButton.clicked.connect(self.backButtonPressed)
         self.backButton.resize(self.backButton.minimumSizeHint())
 
-        self.checkBox = QCheckBox("Show Debug options", self.vertLayoutW)
+        self.checkBox = QCheckBox("Show Debug options", self.optVertLayoutW)
         self.checkBox.toggled.connect(self.toggleOptions)
+        self.checkBox.setStyleSheet("QCheckBox{ color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;} QCheckBox::indicator { width: 25px; height: 25px;};")    
         
         if self.toggleDebug == True:
             self.checkBox.setChecked(True)
 
-        self.checkBox.setStyleSheet("QCheckBox{ color: white; font-weight: bold; font-size: 30px; font-family: Helvetica, sans-serif;} QCheckBox::indicator { width: 25px; height: 25px;};")    
-        self.vertLayout.addWidget(self.checkBox, 0, Qt.AlignCenter)
-        self.vertLayout.addWidget(self.backButton, 0, Qt.AlignCenter)
+        self.optVertLayout.addWidget(self.checkBox, 0, Qt.AlignCenter)
+        self.optVertLayout.addWidget(self.backButton, 0, Qt.AlignCenter)
 
    
 
@@ -159,7 +155,6 @@ class App(QMainWindow):
         """
         self.pregame_frame = QFrame(self)
         self.pregame_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
-
         self.pregame_frame.setFrameShape(QFrame.StyledPanel)
         self.pregame_frame.setFrameShadow(QFrame.Raised)
         self.pregame_frame.resize(self.width(), self.height())
@@ -210,11 +205,11 @@ class App(QMainWindow):
         self.preHorizontalLayout.addWidget(self.preBackButton)
         self.preHorizontalLayout.addWidget(self.playButton)
 
-        self.preVertLayout.addWidget(self.selectorButton)
-        self.preVertLayout.addWidget(self.selector2Button)
-        self.preVertLayout.addWidget(self.modeText)
-        self.preVertLayout.addWidget(self.modeSelect)
-        self.preVertLayout.addWidget(self.preHorizontalLayoutW)
+        self.preVertLayout.addWidget(self.selectorButton, 0, Qt.AlignCenter)
+        self.preVertLayout.addWidget(self.selector2Button, 0, Qt.AlignCenter)
+        self.preVertLayout.addWidget(self.modeText, 0, Qt.AlignCenter)
+        self.preVertLayout.addWidget(self.modeSelect, 0, Qt.AlignCenter)
+        self.preVertLayout.addWidget(self.preHorizontalLayoutW, 0, Qt.AlignCenter)
 
         # only press play when a breeder is selected
         self.playButton.setEnabled(False)
@@ -226,7 +221,6 @@ class App(QMainWindow):
         """
         self.gameover_frame = QFrame(self)
         self.gameover_frame.setStyleSheet("background-color: rgb(126, 144, 173)")
-
         self.gameover_frame.setFrameShape(QFrame.StyledPanel)
         self.gameover_frame.setFrameShadow(QFrame.Raised)
         self.gameover_frame.resize(self.width(), self.height())
@@ -262,13 +256,12 @@ class App(QMainWindow):
         self.quitGameButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
         self.quitGameButton.clicked.connect(self.handleExitButton)
 
-
         self.overHorizontalLayout.addWidget(self.playAgainButton)
         self.overHorizontalLayout.addWidget(self.backToMMButton)
         self.overHorizontalLayout.addWidget(self.quitGameButton)
 
-        self.overVertLayout.addWidget(self.gameOverText)
-        self.overVertLayout.addWidget(self.overHorizontalLayoutW)
+        self.overVertLayout.addWidget(self.gameOverText, 0, Qt.AlignCenter)
+        self.overVertLayout.addWidget(self.overHorizontalLayoutW, 0, Qt.AlignCenter)
 
 
     def play_game(self):
@@ -280,7 +273,7 @@ class App(QMainWindow):
         self.mainMenu.setVisible(True)
         self.gameMenu.setEnabled(True)
         self.optionMenu.setEnabled(True)
-        
+        # reset so classes need to be selected again when a new game is played
         self.selectedBreederBlue = False
         self.selectedBreederYellow = False
         # check whether debug settings were enabled in the options menu
@@ -391,6 +384,7 @@ class App(QMainWindow):
         """
         A mode in the pregame screen was selected, change game mode
         """
+        # set to lower case so the background image selection in game_frame.py works
         self.selectedMode = self.modeSelect.currentText().lower()
 
 
@@ -426,19 +420,18 @@ class App(QMainWindow):
         try:    
             if hasattr(self, 'main_frame') and self.main_frame is not None:
                 self.main_frame.resize(self.width(), self.height())
-                if hasattr(self, 'verticalLayoutWidget') and self.verticalLayoutWidget is not None:
-                    self.verticalLayoutWidget.resize(self.width(), self.height())
+                if hasattr(self, 'mainVerticalLayoutWidget') and self.mainVerticalLayoutWidget is not None:
+                    self.mainVerticalLayoutWidget.resize(self.width(), self.height())
             
             if hasattr(self, 'pregame_frame') and self.pregame_frame is not None:
                 self.pregame_frame.resize(self.width(), self.height())
                 if hasattr(self, 'preVertLayoutW') and self.preVertLayoutW is not None:
                     self.preVertLayoutW.resize(self.width(), self.height())
-                    print("resizing preVertLayoutW")
 
             if hasattr(self, 'opt_frame') and self.opt_frame is not None:    
                 self.opt_frame.resize(self.width(), self.height())
-                if hasattr(self, 'vertLayoutW') and self.vertLayoutW is not None:
-                    self.vertLayoutW.resize(self.width(), self.height())
+                if hasattr(self, 'optVertLayoutW') and self.optVertLayoutW is not None:
+                    self.optVertLayoutW.resize(self.width(), self.height())
 
             if hasattr(self, 'game_frame') and self.game_frame is not None:        
                 self.game_frame.resize_frame(self.width(), self.height())
@@ -467,6 +460,7 @@ class App(QMainWindow):
         checks if two files were selected, if yes, load the classes and enable the play button
         """
         if self.selectedBreederBlue == True and self.selectedBreederYellow == True:
+            #enable play button
             self.playButton.setStyleSheet("color: white; font-weight: bold; font-size: 36px; font-family: Helvetica, sans-serif;")
             self.playButton.setEnabled(True)        
             self.optimizers = self.load_breeders(self.breederBluePath, self.breederYellowPath)

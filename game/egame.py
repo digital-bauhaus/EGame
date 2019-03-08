@@ -218,6 +218,7 @@ class EGame:
         # check if all individuals are dead
         if all_dead:
             self.result, self.winner_color = self.end_game()
+            # trigger end game screen 
             self.parent.parent_window.game_over(self.winner_color)
 
     

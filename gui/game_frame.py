@@ -14,6 +14,7 @@ class GameFrame(QFrame):
         self.parent_window = parent
         self.config = parent.config
         self.global_config = parent.global_config
+        
         if frame_width is None and frame_height is None:
             self.frame_dimension = (self.global_config['frame']['width'],
                                    self.global_config['frame']['height']) 
@@ -24,12 +25,14 @@ class GameFrame(QFrame):
             self.game_speed = 0
         else:
             self.game_speed = self.global_config['game_speed']
+        
         self.gameMode = gameMode
+        
         self.init_frame()
-        self.resize(self.frame_dimension[0],
-                          self.frame_dimension[1])
+        
+        self.resize(self.frame_dimension[0], self.frame_dimension[1])
+        
         self.set_background()
-
                 
 
     def set_background(self):
@@ -51,6 +54,7 @@ class GameFrame(QFrame):
         self.resize(width, height)
         self.frame_dimension = (width, height)
 
+    
     def open_statistics(self):
         """
         open a new window to display population details
@@ -99,8 +103,10 @@ class GameFrame(QFrame):
             self.game.update()
         self.update()
 
+
     def stop_timer(self):
         self.timer.stop()
+
 
     def timerEvent(self, event):
         """

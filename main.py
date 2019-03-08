@@ -19,7 +19,6 @@ if __name__ == "__main__":
         sys.exit(0)
     config_path = sys.argv[1]
     config = Config(config_path)
-    
     # fast mode additional parameter: bool enabled, int runs
     # change if fast mode you need the parameters, otherwise only "python3 ./main.py"
     fastmode = False
@@ -28,7 +27,6 @@ if __name__ == "__main__":
         fastmode = sys.argv[4]
         fastmode_runs = int(sys.argv[5])
         threads = []
-
         optimizer1_path = sys.argv[2]
         optimizer2_path = sys.argv[3] 
         spec1 = importlib.util.spec_from_file_location("opti1", optimizer1_path)

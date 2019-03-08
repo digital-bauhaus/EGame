@@ -5,7 +5,7 @@ EGame is a competitive evolutionary game designed by the research group Intellig
 Two populations compete to survive in a changing environment.
 Endangered by extinction, hunting predators, and other factors.
 
-![game](./documentation/game.png)
+![game](./documentation/new_game.png)
 
 # Requirements
 - Python3
@@ -42,15 +42,21 @@ pip install numpy pyqt5
 # Run the Game
 
 ```
-python3 main.py <config> <blue breeder class> <yellow breeder class>
-# e.g:
-python3 main.py config.json genetic_algorithm/breeder.py genetic_algorithm/breeder_aggressive.py
+./run.sh
 ```
+or
+```
+python3 main.py <config>
+# e.g:
+python3 main.py config.json 
+```
+# Start a new Game
+![pregame](./documentation/pregame.png)<br>
+To start a new game, press *Play new game* and, in the next screen, select the two breeder classes that should play against each other by pressing the buttons. A file selector will appear. When both classes are selected, you can play.
 
 # Game Elements
-
 ## Individuals of populations
-![individual](./documentation/individual.png)<br>
+![individual](./documentation/blue1.png)<br>
 Populations consist of individuals which have certain traits, abilities and perceptions.
 To survive, an individual has to eat something; for example, food, poison, heal potions and corpses.
 They can attack individuals of other populations (but no predators) or be attacked by individuals of other populations or predators.
@@ -92,27 +98,27 @@ After a defined amount of frames, new individuals are bred into the populations 
 Bad performing individuals die due to natural selection and good performing individuals survive, enabling them to multiply.
 
 ## Predators
-![predator](./documentation/predator.png)<br>
+![predator](./documentation/predator1.png)<br>
 Predators are individuals which follow a defined rule set.
 All have the same perception radius to seek individuals of the player populations and corpses.
 In addition, they desire to seek individuals and corpses equally.
 
 ## Items
 ### Food
-![food](./img/food4_scaled20.png)<br>
+![food](./img/food.png)<br>
 Food only increases health points of individuals who eat it.
 
 ### Poison
-![food](./img/mushroom_kenny.png)<br>
+![food](./img/poison.png)<br>
 Poison increases the internal toxicity of an individual.
 The more poison an individual eats, the faster its health decreases.
 
 ### Heal Potions
-![food](./img/hp_potion_shadow_scaled20.png)<br>
+![food](./img/heal_potion.png)<br>
 Health potions reset the poison count and increase the health by a small amount.
 
 ### Corpses
-![food](./img/meat.png)<br>
+![food](./img/corpse_yellow.png)<br>
 Corpses are like food, only that they contain a fraction of the poison of the dead individual.
 
 # Task
@@ -152,5 +158,6 @@ class Breeder:
 
 
 # Goal of the Game
+![endgame](./documentation/gameover.png)<br>
 Let your population survive longer than the population of your opponent!
 If all individuals of a population are dead, the round ends and the surviving population wins!

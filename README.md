@@ -52,7 +52,7 @@ python3 main.py config.json
 ```
 # Start a new Game
 ![pregame](./documentation/pregame.png)<br>
-To start a new game, press *Play new game* and, in the next screen, select the two breeder classes that should play against each other by pressing the buttons. A file selector will appear. When both classes are selected, you can play.
+To start a new game, press *Play new game* in the main menu and, in the next screen, select the two breeder classes that should play against each other by pressing the buttons. A file selector will appear. When both classes are selected, you can play.
 
 # Game Elements
 ## Individuals of populations

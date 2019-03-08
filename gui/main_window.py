@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QFrame, QAction, QWidget, QHBoxLayout, QVBoxLayout, QCheckBox, QPushButton, QFileDialog, QComboBox, QLabel, QDialog
+from PyQt5.QtWidgets import QMainWindow, QFrame, QAction, QWidget, QHBoxLayout, QVBoxLayout, QCheckBox, QPushButton, QFileDialog, QComboBox, QLabel, QDialog, QStackedWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from .game_frame import GameFrame
@@ -62,7 +62,19 @@ class App(QMainWindow):
                          self.resolution[1])
 
         self.init_main_frame()
+        self.init_options()
+        self.init_pregame()
+        self.init_gameover_frame()
 
+        self.stackedWidget = QStackedWidget()        
+        self.stackedWidget.addWidget(self.main_frame)
+        self.stackedWidget.addWidget(self.opt_frame)
+        self.stackedWidget.addWidget(self.pregame_frame)
+        self.stackedWidget.addWidget(self.gameover_frame)
+        self.stackedWidget.setCurrentWidget(self.main_frame)
+        
+        self.setCentralWidget(self.stackedWidget)
+        
         # add top menu bar with items
         self.mainMenu = self.menuBar()
         self.gameMenu = self.mainMenu.addMenu('Game')
@@ -76,6 +88,7 @@ class App(QMainWindow):
 
         self.statusbar = self.statusBar()
 
+        self.statusbar.setVisible(False)
 
     def init_main_frame(self):
         """
@@ -144,8 +157,8 @@ class App(QMainWindow):
         if self.toggleDebug == True:
             self.checkBox.setChecked(True)
 
-        self.optVertLayout.addWidget(self.checkBox, 0, Qt.AlignCenter)
-        self.optVertLayout.addWidget(self.backButton, 0, Qt.AlignCenter)
+        self.optVertLayout.addWidget(self.checkBox)
+        self.optVertLayout.addWidget(self.backButton)
 
    
 
@@ -205,11 +218,11 @@ class App(QMainWindow):
         self.preHorizontalLayout.addWidget(self.preBackButton)
         self.preHorizontalLayout.addWidget(self.playButton)
 
-        self.preVertLayout.addWidget(self.selectorButton, 0, Qt.AlignCenter)
-        self.preVertLayout.addWidget(self.selector2Button, 0, Qt.AlignCenter)
-        self.preVertLayout.addWidget(self.modeText, 0, Qt.AlignCenter)
-        self.preVertLayout.addWidget(self.modeSelect, 0, Qt.AlignCenter)
-        self.preVertLayout.addWidget(self.preHorizontalLayoutW, 0, Qt.AlignCenter)
+        self.preVertLayout.addWidget(self.selectorButton)
+        self.preVertLayout.addWidget(self.selector2Button)
+        self.preVertLayout.addWidget(self.modeText)
+        self.preVertLayout.addWidget(self.modeSelect)
+        self.preVertLayout.addWidget(self.preHorizontalLayoutW)
 
         # only press play when a breeder is selected
         self.playButton.setEnabled(False)
@@ -233,9 +246,8 @@ class App(QMainWindow):
         self.overVertLayout.setAlignment(Qt.AlignCenter)
 
         self.gameOverText = QLabel(self.overVertLayoutW)
-        self.gameOverText.setText("Game over. " + winner + " won!")
         self.gameOverText.setStyleSheet("color: white; font-weight: bold; font-size: 46px; font-family: Helvetica, sans-serif;")
-
+        
         self.overHorizontalLayoutW = QWidget(self.gameover_frame)
 
         self.overHorizontalLayout = QHBoxLayout(self.overHorizontalLayoutW)
@@ -260,8 +272,8 @@ class App(QMainWindow):
         self.overHorizontalLayout.addWidget(self.backToMMButton)
         self.overHorizontalLayout.addWidget(self.quitGameButton)
 
-        self.overVertLayout.addWidget(self.gameOverText, 0, Qt.AlignCenter)
-        self.overVertLayout.addWidget(self.overHorizontalLayoutW, 0, Qt.AlignCenter)
+        self.overVertLayout.addWidget(self.gameOverText)
+        self.overVertLayout.addWidget(self.overHorizontalLayoutW)
 
 
     def play_game(self):
@@ -283,8 +295,8 @@ class App(QMainWindow):
             self.toggleMenu.setEnabled(False)
         
         self.game_frame = GameFrame(self, self.selectedMode, self.width(), self.height())
-        self.setCentralWidget(self.game_frame)
-
+        self.stackedWidget.addWidget(self.game_frame)
+        self.stackedWidget.setCurrentWidget(self.game_frame)
         # connect statusbar with messages from game_frame
         self.game_frame.msg2Statusbar[str].connect(self.statusbar.showMessage)
 
@@ -304,9 +316,14 @@ class App(QMainWindow):
         """
         Game is finished (this method is called from egame.py)
         """
-        self.init_gameover_frame(winner)
-        self.setCentralWidget(self.gameover_frame)
+        self.gameOverText.setText("Game over. " + winner + " won!")
+        self.stackedWidget.setCurrentWidget(self.gameover_frame)
+        #self.overVertLayoutW.resize(self.width(), self.height())
+        self.gameMenu.setEnabled(False)
+        self.optionMenu.setEnabled(False)
+        self.mainMenu.setVisible(False)
         self.statusbar.setVisible(False)
+        
         self.show()
 
 
@@ -314,8 +331,7 @@ class App(QMainWindow):
         """
         Play is pressed in the main menu
         """
-        self.init_pregame()
-        self.setCentralWidget(self.pregame_frame)
+        self.stackedWidget.setCurrentWidget(self.pregame_frame)
         self.show()
 
 
@@ -331,8 +347,8 @@ class App(QMainWindow):
         """
         Options is pressed in main menu
         """
-        self.init_options()
-        self.setCentralWidget(self.opt_frame)
+        self.stackedWidget.setCurrentWidget(self.opt_frame)
+        #self.optVertLayoutW.resize(self.width(), self.height())
         self.show()
 
 
@@ -362,7 +378,7 @@ class App(QMainWindow):
 
     def backToMenuButton(self):
         """
-        Game is stopped and main menu is shown
+        Game is stopped during a running game and main menu is shown
         """
         self.game_frame.stop_timer()
         self.backToMenu()
@@ -372,11 +388,10 @@ class App(QMainWindow):
         """
         reinitialize main menu screen
         """
-        self.init_main_frame()
         self.gameMenu.setEnabled(False)
         self.optionMenu.setEnabled(False)
-        self.setCentralWidget(self.main_frame)
-        self.verticalLayoutWidget.resize(self.width(), self.height())
+        self.stackedWidget.setCurrentWidget(self.main_frame)        
+        #self.mainVerticalLayoutWidget.resize(self.width(), self.height())
         self.show()
 
 
@@ -414,35 +429,19 @@ class App(QMainWindow):
             
     def resizeEvent(self, event):
         """
-        Window size has changed, resize frames accordingly 
-        BUG: It sometimes throws a Runtime Error because the garbage collector of PyQT has deleted a frame. It still works though.  
+        Window size has changed, resize frames accordingly  
         """   
-        try:    
-            if hasattr(self, 'main_frame') and self.main_frame is not None:
-                self.main_frame.resize(self.width(), self.height())
-                if hasattr(self, 'mainVerticalLayoutWidget') and self.mainVerticalLayoutWidget is not None:
-                    self.mainVerticalLayoutWidget.resize(self.width(), self.height())
-            
-            if hasattr(self, 'pregame_frame') and self.pregame_frame is not None:
-                self.pregame_frame.resize(self.width(), self.height())
-                if hasattr(self, 'preVertLayoutW') and self.preVertLayoutW is not None:
-                    self.preVertLayoutW.resize(self.width(), self.height())
+        self.main_frame.resize(self.width(), self.height())
+        self.mainVerticalLayoutWidget.resize(self.width(), self.height())
+        self.pregame_frame.resize(self.width(), self.height())
+        self.preVertLayoutW.resize(self.width(), self.height())  
+        self.opt_frame.resize(self.width(), self.height())
+        self.optVertLayoutW.resize(self.width(), self.height())
+        self.gameover_frame.resize(self.width(), self.height())
+        self.overVertLayoutW.resize(self.width(), self.height())
 
-            if hasattr(self, 'opt_frame') and self.opt_frame is not None:    
-                self.opt_frame.resize(self.width(), self.height())
-                if hasattr(self, 'optVertLayoutW') and self.optVertLayoutW is not None:
-                    self.optVertLayoutW.resize(self.width(), self.height())
-
-            if hasattr(self, 'game_frame') and self.game_frame is not None:        
-                self.game_frame.resize_frame(self.width(), self.height())
-            
-            if hasattr(self, 'gameover_frame') and self.gameover_frame is not None:
-                self.gameover_frame.resize(self.width(), self.height())
-                if hasattr(self, 'overVertLayoutW') and self.overVertLayoutW is not None:
-                    self.overVertLayoutW.resize(self.width(), self.height())
-        # not so nice workaround for the bug stated above 
-        except RuntimeError:
-            pass
+        if hasattr(self, 'game_frame') and self.game_frame is not None:        
+            self.game_frame.resize_frame(self.width(), self.height())
 
     
     def keyPressEvent(self, event):
